@@ -1,0 +1,302 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export DH_OPTIONS
+export LC_ALL=C.UTF-8
+
+VERSION := $(shell dpkg-parsechangelog | awk '/^Version:/ { print $$2 }')
+EXPECTED_AC_VERSION := $(shell echo "$(VERSION)" | cut -d. -f1,2)
+AC_VERSION := $(shell grep -w '^AC_INIT' configure.ac | cut -d' ' -f2 | \
+			sed 's/[][,]//g')
+MANGLED_VERSION := $(subst ~,-,$(VERSION))
+
+ifneq ($(EXPECTED_AC_VERSION),$(AC_VERSION))
+$(warning Version $(VERSION) in debian/changelog does not match $(AC_VERSION) in configure.ac!)
+endif
+
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+console-setup-depends := console-setup (>= $(shell cd d-i/source/console-setup && dpkg-parsechangelog | awk '/Version:/ {print $$2}'))
+
+update:
+	$(MAKE) -C d-i update
+
+update-local:
+	$(MAKE) -C d-i update UPDATE_LOCAL=1
+
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
+
+build-stamp:
+	dh_testdir
+
+	dh_autoreconf -- ./autogen.sh
+	dh_auto_configure -- --libexecdir=\$${prefix}/lib
+	dh_auto_build
+	$(MAKE) -C d-i build
+	convert -resize 32x32 data/lingmo-installer.svg pixmaps/lingmo-installer.xpm
+
+	touch build-stamp
+
+check:
+	# Sanity-check before upload.
+	find -name debian -prune -o -name \*.py -print | xargs py3compile
+	find -type f \( -name \*.pyc -o -name \*.pyo \) -print0 | xargs -0r rm -f
+	find -name __pycache__ -print0 | xargs -0r rm -rf
+	# Check the syntax of any shell scripts.
+	set -e; for x in $$(find -type f \! -name \*.po \! -name \*.pot -print0 | xargs -0 file -i | grep "text/x-shellscript" | cut -d':' -f1); do \
+		sh -n $$x; \
+	done
+	# Check the syntax of any Python scripts.
+	./tests/run-pyflakes
+	./tests/run-pep8
+
+pychecker:
+	./run-pychecker
+
+clean: check
+	dh_testdir
+	dh_testroot
+
+	$(MAKE) -C d-i clean
+	dh_auto_clean
+	dh_autoreconf_clean
+	dh_clean
+	rm -rf build-locale tests/partman-tree pixmaps/lingmo-installer.xpm
+
+	$(MAKE) -C d-i check
+
+d-i/source/console-setup/Keyboard/KeyboardNames.pl:
+	$(MAKE) -C d-i/source/console-setup/Keyboard $(CURDIR)/d-i/source/console-setup/Keyboard/KeyboardNames.pl
+		xkbdir=/usr/share/X11/xkb
+
+debian/kbdnames.gz: d-i/source/console-setup/Keyboard/KeyboardNames.pl
+	d-i/source/console-setup/Keyboard/kbdnames-maker ./$< | gzip -9c > $@
+
+install: install-stamp
+
+install-stamp: DH_OPTIONS=
+install-stamp: build-stamp debian/kbdnames.gz
+	dh_testdir
+	dh_testroot
+	dh_prep
+	cp debian/lingmo-installer.dirs-any debian/lingmo-installer.dirs
+ifneq (,$(wildcard debian/lingmo-installer.dirs-$(DEB_HOST_ARCH)))
+	cat debian/lingmo-installer.dirs-$(DEB_HOST_ARCH) >> debian/lingmo-installer.dirs
+endif
+	dh_installdirs
+	dh_installmenu
+
+	$(MAKE) install DESTDIR=`pwd`/debian/tmp
+	# Would probably be better to do this in the upstream buildsystem
+
+	# help.lingmo.com/rst
+	qrencode -m 0 -s 5 -t PNG -l H -o debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-rst-input.png "https://help.lingmo.com/rst"
+	convert debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-rst-input.png -transparent white debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-rst.png
+	rm debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-rst-input.png
+
+	# help.lingmo.com/bitlocker
+	qrencode -m 0 -s 5 -t PNG -l H -o debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-bitlocker-input.png "https://help.lingmo.com/bitlocker"
+	convert debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-bitlocker-input.png -transparent white debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-bitlocker.png
+	rm debian/tmp/usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com-bitlocker-input.png
+
+	$(MAKE) -C d-i install
+
+	cp debian/lingmo-installer.install-any debian/lingmo-installer.install
+ifneq (,$(wildcard debian/lingmo-installer.install-$(DEB_HOST_ARCH)))
+	cat debian/lingmo-installer.install-$(DEB_HOST_ARCH) >> debian/lingmo-installer.install
+endif
+ifdef LINGMO-INSTALLER_NO_GTK
+	dh_install -Nlingmo-installer-frontend-gtk -Noem-config-gtk
+else
+ifdef LINGMO-INSTALLER_NO_KDE
+	dh_install -Nlingmo-installer-frontend-kde -Noem-config-kde
+else
+	dh_install
+endif
+endif
+	# We don't need the source files installed
+	rm -rf debian/lingmo-installer-frontend-kde/usr/share/lingmo-installer/qt/images/source/
+
+	dh_di_numbers
+
+	# Bits of manual installation that can't be done by dh_install
+
+	install bin/lingmo-installer-wrapper debian/lingmo-installer/usr/bin/lingmo-installer
+	sed 's/@VERSION@/$(VERSION)/g' bin/lingmo-installer \
+		> debian/lingmo-installer/usr/lib/lingmo-installer/bin/lingmo-installer
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/bin/lingmo-installer
+	sed 's,/usr/lib/apt-setup,/usr/lib/lingmo-installer/apt-setup,g' \
+		d-i/source/apt-setup/apt-setup \
+		> debian/lingmo-installer/usr/lib/lingmo-installer/apt-setup/apt-setup
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/apt-setup/apt-setup
+
+	install d-i/source/apt-setup/finish-install.d/10apt-cdrom-setup \
+		debian/lingmo-installer/usr/lib/lingmo-installer/apt-setup/finish-install
+	if [ -e "d-i/source/base-installer/kernel/$(DEB_HOST_ARCH).sh" ]; then \
+		install -m644 d-i/source/base-installer/kernel/$(DEB_HOST_ARCH).sh \
+			debian/lingmo-installer/usr/lib/lingmo-installer/base-installer/kernel.sh; \
+	fi
+	install d-i/source/clock-setup/debian/clock-setup.postinst \
+		debian/lingmo-installer/usr/lib/lingmo-installer/clock-setup/clock-setup
+	sed -e '/^# Update target system configuration/ { s/.*/exit 0/; q }' \
+		d-i/source/clock-setup/finish-install.d/10clock-setup \
+		> debian/lingmo-installer/usr/lib/lingmo-installer/clock-setup/finish-install
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/clock-setup/finish-install
+	sed -e 's,/usr/share/console-setup/keyboard-configuration.config,/var/lib/dpkg/info/keyboard-configuration.config,g' \
+	    -e 's,^\([[:space:]]*\)update-initramfs,\1: update-initramfs,' \
+		d-i/source/console-setup/debian/keyboard-configuration.postinst \
+		> debian/lingmo-installer/usr/lib/lingmo-installer/console-setup/keyboard-configuration.postinst
+	(cd d-i/source/console-setup && \
+	 debian/preprocessor $(CURDIR)/debian/lingmo-installer/usr/lib/lingmo-installer/console-setup/keyboard-configuration.postinst && \
+	 debian/preprocessor $(CURDIR)/debian/lingmo-installer/usr/share/lingmo-installer/console-setup-apply)
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/console-setup/keyboard-configuration.postinst
+	sed 's,\(finish_install=\).*,\1/dev/null,' \
+		d-i/source/hw-detect/debian/hw-detect/bin/hw-detect \
+		> debian/lingmo-installer/bin/hw-detect
+	chmod +x debian/lingmo-installer/bin/hw-detect
+	set -e; for x in languagemap localechooser; do \
+		sed 's,/usr/share/localechooser,/usr/lib/lingmo-installer/localechooser,g' \
+			d-i/source/localechooser/$$x \
+			> debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/$$x; \
+		chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/$$x; \
+	done
+	cp -a d-i/source/localechooser/post-base-installer.d/05localechooser \
+		debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/post-base-installer
+	patch debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/post-base-installer \
+		< d-i/patches/localechooser-post-base-installer.patch
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/post-base-installer
+	sed 's/\\\$${!TAB}/ /g' \
+		debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/localechooser \
+		> debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/localechooser-debconf
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/localechooser-debconf
+	install d-i/source/localechooser/finish-install.d/05localechooser \
+		debian/lingmo-installer/usr/lib/lingmo-installer/localechooser/finish-install
+	install d-i/source/tzsetup/post-base-installer.d/*tzsetup \
+		debian/lingmo-installer/usr/lib/lingmo-installer/tzsetup/post-base-installer
+	sed -e 's,/target/,/,g;s,/target,/,g' \
+		debian/lingmo-installer/usr/lib/lingmo-installer/tzsetup/post-base-installer \
+		> debian/oem-config/usr/lib/lingmo-installer/tzsetup/post-base-installer-oem
+	chmod +x debian/oem-config/usr/lib/lingmo-installer/tzsetup/post-base-installer-oem
+	sed -i -e 's,db_input medium tzsetup/selected,db_input high tzsetup/selected,' \
+	       -e 's,/usr/share/tzsetup/tzmap,/usr/lib/lingmo-installer/tzsetup/tzmap,g' \
+		debian/lingmo-installer/usr/lib/lingmo-installer/tzsetup/tzsetup
+	cp debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/reserved-usernames \
+		debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/reserved-usernames-oem
+	echo oem >> debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/reserved-usernames-oem
+	set -e; for x in user-setup user-setup-ask user-setup-apply; do \
+		sed -e 's,/usr/lib/user-setup,/usr/lib/lingmo-installer/user-setup,g' \
+		    -e 's,/bin/sh,/bin/bash,g' \
+			d-i/source/user-setup/$$x \
+			> debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/$$x; \
+		chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/$$x; \
+	done
+	sed -i -e 's,db_input high user-setup/encrypt-home,db_input medium user-setup/encrypt-home,' \
+		debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/user-setup-ask
+	sed -e 's,reserved-usernames,reserved-usernames-oem,g' \
+		debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/user-setup-ask \
+		> debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/user-setup-ask-oem
+	chmod +x debian/lingmo-installer/usr/lib/lingmo-installer/user-setup/user-setup-ask-oem
+	install d-i/source/debian-installer-utils/list-devices-$(DEB_HOST_ARCH_OS) \
+		debian/lingmo-installer/bin/list-devices
+	install d-i/source/debian-installer-utils/post-base-installer.d/10register-module \
+		debian/lingmo-installer/usr/lib/lingmo-installer/debian-installer-utils/register-module.post-base-installer
+	sed -e 's,/target/,/,g;s,/target,/,g' \
+		d-i/source/debian-installer-utils/post-base-installer.d/10register-module \
+		> debian/oem-config/usr/lib/lingmo-installer/debian-installer-utils/register-module.post-base-installer-oem
+	chmod +x debian/oem-config/usr/lib/lingmo-installer/debian-installer-utils/register-module.post-base-installer-oem
+	touch install-stamp
+
+tests: install-stamp
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	CODE=0; env -i LANG=C.UTF-8 ./tests/run --xvfb-log debian/xvfb.log || CODE=$$?; \
+	echo "xauth/Xrdb output:"; \
+	cat debian/xvfb.log; \
+	rm -f debian/xvfb.log; \
+	exit $$CODE
+endif
+
+BINARY_INDEP_OPTIONS := -i
+ifdef LINGMO-INSTALLER_NO_GTK
+BINARY_INDEP_OPTIONS += -Noem-config-gtk
+endif
+ifdef LINGMO-INSTALLER_NO_KDE
+BINARY_INDEP_OPTIONS += -Nlingmo-installer-frontend-kde -Noem-config-kde
+endif
+
+# Build architecture-independent files here.
+binary-indep: DH_OPTIONS=$(BINARY_INDEP_OPTIONS)
+binary-indep: install-stamp
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installdebconf
+	# oem-config
+	dh_systemd_enable --name=oem-config
+	dh_installinit -n --name=oem-config
+	dh_installinit -n --name=oem-config-debconf
+	dh_installman
+	dh_lintian
+	dh_link
+	dh_scour
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_python3 /usr/lib/lingmo-installer
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol -- -Vmangled-version='$(MANGLED_VERSION)'
+	dh_md5sums
+	NO_PNG_PKG_MANGLE=1 dh_builddeb -- -Zxz
+
+BINARY_ARCH_OPTIONS := -a
+ifdef LINGMO-INSTALLER_NO_GTK
+BINARY_ARCH_OPTIONS += -Nlingmo-installer-frontend-gtk
+endif
+
+# Build architecture-dependent files here.
+binary-arch: DH_OPTIONS=$(BINARY_ARCH_OPTIONS)
+binary-arch: tests install-stamp
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installdebconf
+	echo >> debian/lingmo-installer/DEBIAN/templates
+	po2debconf --podir=debian/imported-po \
+		debian/lingmo-installer.templates-imported \
+		>> debian/lingmo-installer/DEBIAN/templates
+	echo >> debian/lingmo-installer/DEBIAN/templates
+	grep-dctrl -XFTemplate base-installer/kernel/linux/link_in_boot \
+		d-i/templates \
+		>> debian/lingmo-installer/DEBIAN/templates
+	if [ "$$(tail -n1 debian/lingmo-installer/DEBIAN/templates)" ]; then \
+		echo >> debian/lingmo-installer/DEBIAN/templates; \
+	fi
+	grep-dctrl -v -FTemplate base-installer/ d-i/templates \
+		>> debian/lingmo-installer/DEBIAN/templates
+	# lingmo-installer
+	dh_systemd_enable --name=lingmo-installer
+	dh_installinit --no-start --name=lingmo-installer
+	dh_installman
+	dh_lintian
+	dh_link
+	dh_scour
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_python3 /usr/lib/lingmo-installer
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol -- -V'console-setup-depends=$(console-setup-depends)' -Vmangled-version='$(MANGLED_VERSION)'
+	dh_md5sums
+	NO_PNG_PKG_MANGLE=1 dh_builddeb -- -Zxz
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install tests

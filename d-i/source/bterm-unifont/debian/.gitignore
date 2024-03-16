@@ -1,0 +1,6 @@
+*.debhelper*
+*.substvars
+bterm-unifont
+files
+files~
+

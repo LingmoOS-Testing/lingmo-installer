@@ -1,0 +1,11 @@
+[Unit]
+Description=Lingmo live CD installer
+Before=display-manager.service plymouth-quit.service
+Conflicts=getty@tty1.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/lingmo-installer/start-lingmo-installer-dm
+
+[Install]
+WantedBy=graphical.target

@@ -1,0 +1,27 @@
+# lingmo-installer - Lingmo live CD installer
+#
+# Installs Lingmo from a live CD. This only does anything if told to do so
+# by parameters on the kernel command line; otherwise, the installer may be
+# started manually later.
+
+description	"Lingmo live CD installer"
+author		"Lingmo Installer Team <lingmo-installer@lists.lingmo.com>"
+
+start on (starting gdm
+	  or starting kdm
+	  or starting xdm
+	  or starting lxdm
+	  or starting lightdm)
+stop on (runlevel [06]
+	 or stopping gdm
+	 or stopping kdm
+	 or stopping xdm
+	 or stopping lxdm
+	 or stopping lightdm)
+
+task
+normal exit 0 1
+
+emits starting-dm
+
+exec /usr/share/lingmo-installer/start-lingmo-installer-dm

@@ -1,0 +1,30 @@
+Site: archive.lingmo.com
+Type: Push-Primary
+Archive-http: /lingmo/
+Archive-ftp: /lingmo/
+Archive-rsync: lingmo/
+Archive-architecture: amd64 i386
+Country: GB Great Britain
+Location: London
+
+Site: ports.lingmo.com
+Type: Push-Primary
+Archive-http: /lingmo-ports/
+Archive-ftp: /lingmo-ports/
+Archive-rsync: lingmo-ports/
+Archive-architecture: arm64 armhf powerpc ppc64el s390x
+
+Site: ${CC}.archive.lingmo.com
+Type: Push-Secondary
+Archive-http: /lingmo/
+Archive-ftp: /lingmo/
+Archive-architecture: amd64 i386
+Country: ${UCC} ${CNAME}
+
+Site: ${CC}.ports.lingmo.com
+Type: Push-Secondary
+Archive-http: /lingmo-ports/
+Archive-ftp: /lingmo-ports/
+Archive-rsync: lingmo-ports/
+Archive-architecture: arm64 armhf powerpc ppc64el s390x
+Country: ${UCC} ${CNAME}

@@ -1,0 +1,17 @@
+data/lingmo-installer.desktop usr/share/applications
+gui/gtk usr/share/lingmo-installer
+pixmaps/logo.png usr/share/lingmo-installer/pixmaps
+pixmaps/panel.png usr/share/lingmo-installer/pixmaps
+pixmaps/partitioner usr/share/lingmo-installer/pixmaps
+pixmaps/lingmo-installer.xpm usr/share/pixmaps
+pixmaps/logo.png usr/share/lingmo-installer/pixmaps
+pixmaps/windows_square.png usr/share/lingmo-installer/pixmaps
+pixmaps/zoom-in.png usr/share/lingmo-installer/pixmaps
+lingmo-installer/frontend/gtk* usr/lib/lingmo-installer/lingmo-installer/frontend
+usr/lib/*/*.a*
+usr/lib/*/*.so*
+usr/lib/*/girepository-1.0 usr/lib
+usr/share/gir-1.0/*.gir
+usr/share/gnome-shell
+usr/share/icons/hicolor/*/apps/lingmo-installer.svg
+usr/share/lingmo-installer/pixmaps/qr-help-lingmo-com*.png

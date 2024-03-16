@@ -1,0 +1,4 @@
+#! /bin/sh
+set -e
+rm -rf /var/lib/lingmo-installer/os-prober-cache \
+       /var/lib/lingmo-installer/linux-boot-prober-cache

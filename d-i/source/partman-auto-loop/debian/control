@@ -1,0 +1,13 @@
+Source: partman-auto-loop
+Section: debian-installer
+Priority: standard
+Maintainer: Lingmo Installer Team <lingmo-installer@lists.lingmo.com>
+Uploaders: Colin Watson <cjwatson@lingmo.com>
+Build-Depends: debhelper (>= 7.0.8), dh-di, po-debconf (>= 0.5.0)
+Vcs-Bzr: http://bazaar.launchpad.net/~lingmo-installer/partman-auto-loop/lingmo
+
+Package: partman-auto-loop
+XC-Package-Type: udeb
+Architecture: all
+Depends: ${misc:Depends}
+Description: Automatically partition using a loop device

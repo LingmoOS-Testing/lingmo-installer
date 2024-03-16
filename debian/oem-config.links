@@ -1,0 +1,2 @@
+/usr/lib/lingmo-installer/bin/lingmo-installer /usr/sbin/oem-config
+/usr/share/man/man8/lingmo-installer.8.gz /usr/share/man/man8/oem-config.8.gz

@@ -1,0 +1,7 @@
+#! /bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+db_set lingmo-installer/partman-rebuild-cache ALL
+
+exit 0

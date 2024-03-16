@@ -1,0 +1,14 @@
+Tests: unit
+Depends: humanity-icon-theme,
+         oem-config,
+         oem-config-debconf,
+         oem-config-gtk,
+         oem-config-kde,
+         oem-config-remaster,
+         python3-mock,
+         lingmo-installer,
+         lingmo-installer-frontend-debconf,
+         lingmo-installer-frontend-gtk,
+         lingmo-installer-frontend-kde,
+         lingmo-installer-lingmo-artwork,
+         xvfb

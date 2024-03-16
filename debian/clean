@@ -1,0 +1,14 @@
+debian/kbdnames.gz
+debian/lingmo-installer.dirs
+debian/lingmo-installer.install
+debian/xvfb.log
+d-i/source/console-setup/Keyboard/KeyboardNames.pl
+po/.intltool-merge-cache
+po/stamp-po
+tests/config.dat*
+tests/debconf-stamp
+tests/debconfdb
+tests/templates.dat*
+lingmo-installer/frontend/liveinstaller.py
+lingmo-installer/frontend/crashdialog.py
+data/com.lingmo.lingmo-installer.policy

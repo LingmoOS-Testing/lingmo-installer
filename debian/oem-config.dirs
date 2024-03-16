@@ -1,0 +1,6 @@
+usr/lib/oem-config/post-install
+usr/lib/lingmo-installer/clock-setup
+usr/lib/lingmo-installer/debian-installer-utils
+usr/lib/lingmo-installer/tzsetup
+var/lib/localechooser
+var/lib/oem-config

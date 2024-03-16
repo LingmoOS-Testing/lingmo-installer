@@ -1,0 +1,3 @@
+#! /bin/sh -e
+# Do nothing in lingmo-installer.
+exit 0

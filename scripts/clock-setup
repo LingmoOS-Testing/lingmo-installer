@@ -1,0 +1,6 @@
+#! /bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+/usr/lib/lingmo-installer/clock-setup/clock-setup
+/usr/lib/lingmo-installer/clock-setup/finish-install

@@ -1,0 +1,12 @@
+# Lingmo-installer is at least in part a debconf application, to which this warning
+# doesn't apply.
+lingmo-installer: debconf-is-not-a-registry *
+
+# Inherited from d-i; no point in showing these again.
+lingmo-installer: malformed-title-in-templates *
+# Inherited from d-i; no point in showing these again.
+lingmo-installer: too-long-extended-description-in-templates *
+# Inherited from d-i; no point in showing these again.
+lingmo-installer: too-long-short-description-in-templates *
+# Inherited from d-i; no point in showing these again.
+lingmo-installer: using-imperative-form-in-templates *

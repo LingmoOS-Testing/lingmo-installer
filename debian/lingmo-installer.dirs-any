@@ -1,0 +1,7 @@
+bin
+usr/bin
+usr/lib/lingmo-installer/base-installer
+usr/lib/lingmo-installer/bin
+usr/lib/lingmo-installer/clock-setup
+usr/lib/lingmo-installer/debian-installer-utils
+var/lib/localechooser

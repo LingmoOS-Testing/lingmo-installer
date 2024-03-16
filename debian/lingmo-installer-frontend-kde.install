@@ -1,0 +1,5 @@
+bin/lingmo-installer-qtsetbg usr/bin
+data/lingmo-installer-kdeui.desktop usr/share/applications/kde
+gui/qt usr/share/lingmo-installer
+lingmo-installer/frontend/kde* usr/lib/lingmo-installer/lingmo-installer/frontend
+usr/share/icons/hicolor/*/apps/lingmo-installer-kde*

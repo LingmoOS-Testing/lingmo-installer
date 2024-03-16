@@ -1,0 +1,4 @@
+generators/50mirror.lingmo usr/lib/apt-setup/generators
+release-files/archive.lingmo.com usr/share/apt-setup/release-files
+release-files/security.lingmo.com usr/share/apt-setup/release-files
+release-files/ports.lingmo.com usr/share/apt-setup/release-files

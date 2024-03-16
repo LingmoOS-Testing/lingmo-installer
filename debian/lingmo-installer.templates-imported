@@ -1,0 +1,66 @@
+Template: lingmo-installer/imported/cancel
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _Cancel
+
+Template: lingmo-installer/imported/close
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _Close
+
+Template: lingmo-installer/imported/go-back
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _Back
+
+Template: lingmo-installer/imported/ok
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _OK
+
+Template: lingmo-installer/imported/quit
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _Quit
+
+Template: lingmo-installer/imported/yes
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _Yes
+
+Template: lingmo-installer/imported/no
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: _No
+
+Template: lingmo-installer/imported/default-ltr
+Type: text
+# Translations for this template are imported from GTK. Please keep them in
+# sync.
+_Description: default:LTR
+
+Template: lingmo-installer/imported/12-hour
+Type: text
+# Translations for this template are imported from gnome-panel. Please keep
+# them in sync.
+_Description: %l:%M %p
+
+Template: lingmo-installer/imported/24-hour
+Type: text
+# Translations for this template are imported from gnome-panel. Please keep
+# them in sync.
+_Description: %H:%M
+
+Template: lingmo-installer/imported/time-format
+Type: text
+# Translations for this template are imported from gnome-panel. Please keep
+# them in sync.
+_Description: 24-hour
+

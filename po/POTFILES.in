@@ -1,0 +1,6 @@
+# files added by intltool-prepare
+data/lingmo-installer.desktop.in
+data/lingmo-installer-kdeui.desktop.in
+data/oem-config-prepare-kde.desktop.in
+data/oem-config-prepare-gtk.desktop.in
+data/com.lingmo.lingmo-installer.policy.in

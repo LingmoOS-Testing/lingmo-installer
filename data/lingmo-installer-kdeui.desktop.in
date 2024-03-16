@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+# Do not translate the word "RELEASE".  It is used as a marker by live.
+_Name=Install RELEASE
+_Comment=Install this system permanently to your hard disk
+_Keywords=lingmo-installer;
+Exec=lingmo-installer kde_ui
+Icon=lingmo-installer-kde
+Terminal=false
+Categories=KDE;Qt;System;
+OnlyShowIn=KDE;
+X-Lingmo-Gettext-Domain=lingmo-installer-desktop
