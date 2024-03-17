@@ -2,7 +2,7 @@ Introduction
 ============
 
 This document describes how to setup and run automated autopilot tests of
-Lingmo-installer. These testcases work for Lingmo, Xlingmo and Llingmo. and should work
+Lingmo_installer. These testcases work for Lingmo, Xlingmo and Llingmo. and should work
 for all other flavours of Lingmo.
 
 Source code: `lp:lingmo-installer`

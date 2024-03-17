@@ -13,7 +13,7 @@ import unittest
 # These tests require Mock 0.7.0
 import mock
 
-from lingmo-installer import misc
+from lingmo_installer import misc
 
 
 _proc_swaps = [
@@ -152,8 +152,8 @@ class MiscTests(unittest.TestCase):
         self.assertEqual(misc.debconf_escape('\\A test string\n'),
                          '\\\\A\\ test\\ string\\n')
 
-    @mock.patch('lingmo-installer.gsettings.set_list')
-    @mock.patch('lingmo-installer.misc.execute')
+    @mock.patch('lingmo_installer.gsettings.set_list')
+    @mock.patch('lingmo_installer.misc.execute')
     def test_set_indicator_keymaps_english(self, mock_execute, mock_set_list):
         misc.set_indicator_keymaps('en')
         self.assertEqual(mock_execute.call_count, 1)
@@ -165,8 +165,8 @@ class MiscTests(unittest.TestCase):
         self.assertEqual('us', mock_set_list.call_args[0][2][0])
         self.assertEqual(len(mock_set_list.call_args[0][2]), 4)
 
-    @mock.patch('lingmo-installer.gsettings.set_list')
-    @mock.patch('lingmo-installer.misc.execute')
+    @mock.patch('lingmo_installer.gsettings.set_list')
+    @mock.patch('lingmo_installer.misc.execute')
     def test_set_indicator_keymaps_french(self, mock_execute, mock_set_list):
         misc.set_indicator_keymaps('fr')
         self.assertEqual(mock_execute.call_count, 1)
@@ -178,8 +178,8 @@ class MiscTests(unittest.TestCase):
         self.assertEqual('fr\toss', mock_set_list.call_args[0][2][0])
         self.assertEqual(len(mock_set_list.call_args[0][2]), 4)
 
-    @mock.patch('lingmo-installer.gsettings.set_list')
-    @mock.patch('lingmo-installer.misc.execute')
+    @mock.patch('lingmo_installer.gsettings.set_list')
+    @mock.patch('lingmo_installer.misc.execute')
     def test_set_indicator_keymaps_variants(self, mock_execute, mock_set_list):
         misc.set_indicator_keymaps('sv')
         self.assertEqual(mock_execute.call_count, 1)
@@ -190,8 +190,8 @@ class MiscTests(unittest.TestCase):
         self.assertEqual(mock_set_list.call_args[0][1], 'layouts')
         self.assertIn('se\tdvorak', mock_set_list.call_args[0][2])
 
-    @mock.patch('lingmo-installer.gsettings.set_list')
-    @mock.patch('lingmo-installer.misc.execute')
+    @mock.patch('lingmo_installer.gsettings.set_list')
+    @mock.patch('lingmo_installer.misc.execute')
     def test_set_indicator_keymaps_simplified_chinese(self, mock_execute,
                                                       mock_set_list):
         misc.set_indicator_keymaps('zh_CN')
@@ -205,8 +205,8 @@ class MiscTests(unittest.TestCase):
         self.assertEqual('cn\taltgr-pinyin', mock_set_list.call_args[0][2][1])
         self.assertEqual(len(mock_set_list.call_args[0][2]), 2)
 
-    @mock.patch('lingmo-installer.gsettings.set_list')
-    @mock.patch('lingmo-installer.misc.execute')
+    @mock.patch('lingmo_installer.gsettings.set_list')
+    @mock.patch('lingmo_installer.misc.execute')
     def test_set_indicator_keymaps_unknown(self, mock_execute, mock_set_list):
         misc.set_indicator_keymaps('unknownlanguage')
         self.assertEqual(mock_execute.call_count, 0)
@@ -214,7 +214,7 @@ class MiscTests(unittest.TestCase):
 
 # class PartedServerTests(unittest.TestCase):
 #     def setUp(self):
-#         patcher = mock.patch('lingmo-installer.parted_server.PartedServer')
+#         patcher = mock.patch('lingmo_installer.parted_server.PartedServer')
 #         patcher.start()
 #         # Probably best to patch at the dialog level rather than each method
 #         # call.
@@ -285,10 +285,10 @@ class PrivilegeTests(unittest.TestCase):
 
 
 class GrubDefaultTests(unittest.TestCase):
-    """Support for testing lingmo-installer.misc.grub_default.
+    """Support for testing lingmo_installer.misc.grub_default.
 
     This class mocks several methods to make it possible to test
-    lingmo-installer.misc.grub_default.  Individual tests should set self.devices to
+    lingmo_installer.misc.grub_default.  Individual tests should set self.devices to
     a list of elements as follows:
 
         [grub_dev, os_dev, by_id_dev]
@@ -314,10 +314,10 @@ class GrubDefaultTests(unittest.TestCase):
         to_patch = (
             'os.path.realpath',
             'os.path.samefile',
-            'lingmo-installer.misc.boot_device',
-            'lingmo-installer.misc.cdrom_mount_info',
-            'lingmo-installer.misc.grub_device_map',
-            'lingmo-installer.misc.is_removable',
+            'lingmo_installer.misc.boot_device',
+            'lingmo_installer.misc.cdrom_mount_info',
+            'lingmo_installer.misc.grub_device_map',
+            'lingmo_installer.misc.is_removable',
         )
         for obj in to_patch:
             patcher = mock.patch(obj)
@@ -392,8 +392,8 @@ class GrubDefaultTests(unittest.TestCase):
         self.cdrom_mount = ('/dev/sr0', 'vfat')
         self.assertEqual('/dev/sda', misc.grub_default())
 
-    @mock.patch('lingmo-installer.misc.drop_privileges')
-    @mock.patch('lingmo-installer.misc.regain_privileges')
+    @mock.patch('lingmo_installer.misc.drop_privileges')
+    @mock.patch('lingmo_installer.misc.regain_privileges')
     def test_avoid_cdrom(self, *args):
         self.devices = [
             ['hd0', 'sda', 'cdrom'],

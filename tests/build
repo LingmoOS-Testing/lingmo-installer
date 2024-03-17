@@ -23,12 +23,12 @@ if [ ! -e d-i/templates ]; then
 fi
 # For loading the console-setup plugin.  This is needed for at least testing
 # loading of plugins.
-[ -e lingmo-installer/keyboard_names.py ] || ./debian/rules lingmo-installer/keyboard_names.py
+[ -e lingmo_installer/keyboard_names.py ] || ./debian/rules lingmo_installer/keyboard_names.py
 
 [ -e tests/debconf-stamp ] || rebuild=:
 if ! $rebuild && [ -e tests/debconfdb ]; then
-	for x in d-i/templates debian/lingmo-installer.templates \
-		debian/lingmo-installer.templates-imported; do
+	for x in d-i/templates debian/lingmo_installer.templates \
+		debian/lingmo_installer.templates-imported; do
 		if [ $x -nt tests/debconf-stamp ]; then
 			rebuild=:
 			break
@@ -38,13 +38,13 @@ else
 	rebuild=:
 fi
 $rebuild && (cat d-i/templates; echo;
-	po2debconf debian/lingmo-installer.templates; echo;
-	po2debconf debian/lingmo-installer.templates-imported \
+	po2debconf debian/lingmo_installer.templates; echo;
+	po2debconf debian/lingmo_installer.templates-imported \
 		--podir=debian/imported-po) > tests/debconfdb
     touch tests/debconf-stamp
 
 export DEBCONF_SYSTEMRC=tests/debconf.conf
-$rebuild && debconf-loadtemplate lingmo-installer tests/debconfdb
+$rebuild && debconf-loadtemplate lingmo_installer tests/debconfdb
 
 rm -rf tests/partman-tree
 for x in d-i/source/part*.udeb; do dpkg -x $x tests/partman-tree; done

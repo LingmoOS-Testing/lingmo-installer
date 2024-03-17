@@ -1,4 +1,4 @@
-# Testing LVM WIth encryption Install for the Lingmo-installer Installer
+# Testing LVM WIth encryption Install for the Lingmo_installer Installer
 # Author: Dan Chapman <daniel@chapman-mail.com>
 # Copyright (C) 2013
 #
@@ -13,13 +13,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from lingmo-installer_autopilot_tests.tests import Lingmo-installerAutopilotTestCase
+from lingmo_installer_autopilot_tests.tests import Lingmo_installerAutopilotTestCase
 from testtools.matchers import Equals
 from autopilot.matchers import Eventually
-from lingmo-installer_autopilot_tests.emulators import gtktoplevel
+from lingmo_installer_autopilot_tests.emulators import gtktoplevel
 
 
-class LVMEncryptInstallTestCase(Lingmo-installerAutopilotTestCase):
+class LVMEncryptInstallTestCase(Lingmo_installerAutopilotTestCase):
     """
     LVMEncrypt install testcase installs *buntu flavor with LVM-encrypt
     partition setup

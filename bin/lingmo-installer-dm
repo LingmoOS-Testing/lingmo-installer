@@ -15,19 +15,19 @@ import time
 import debconf
 import PAM
 
-sys.path.insert(0, '/usr/lib/lingmo-installer')
+sys.path.insert(0, '/usr/lib/lingmo_installer')
 
-from lingmo-installer import gsettings, osextras
-from lingmo-installer.live import get_live
-from lingmo-installer.debconfcommunicator import DebconfCommunicator
-from lingmo-installer.misc import create_bool, utf8
+from lingmo_installer import gsettings, osextras
+from lingmo_installer.live import get_live
+from lingmo_installer.debconfcommunicator import DebconfCommunicator
+from lingmo_installer.misc import create_bool, utf8
 
 
 logfile = None
 
 
 def log(msg):
-    print('lingmo-installer-dm: ' + msg, file=logfile, flush=True)
+    print('lingmo_installer-dm: ' + msg, file=logfile, flush=True)
 
 
 def _pam_conv(auth, query_list, userData):
@@ -48,7 +48,7 @@ def _pam_conv(auth, query_list, userData):
 
 
 def set_locale():
-    db = DebconfCommunicator('lingmo-installer', cloexec=True)
+    db = DebconfCommunicator('lingmo_installer', cloexec=True)
     locale = ''
     try:
         locale = db.get('debian-installer/locale')
@@ -82,8 +82,8 @@ def set_locale():
                     stdout=logfile, stderr=logfile)
 
 
-def add_lingmo-installer_kdedir():
-    os.environ['KDEDIRS'] = '/usr/share/lingmo-installer/qt:' + \
+def add_lingmo_installer_kdedir():
+    os.environ['KDEDIRS'] = '/usr/share/lingmo_installer/qt:' + \
         os.environ.get('KDEDIRS', '')
 
 
@@ -115,7 +115,7 @@ class SignalWatcher:
                     self.on_got_bus, None)
 
     def signal_timeout(self, user_data):
-        log("SignalWatcher: signal timed out, continuing with lingmo-installer-dm")
+        log("SignalWatcher: signal timed out, continuing with lingmo_installer-dm")
         self.loop.quit()
 
     def on_got_bus(self, source, result, user_data):
@@ -181,17 +181,17 @@ class DM:
         frontend_names = ['gtk_ui', 'kde_ui']
         self.frontend = None
         for f in frontend_names:
-            if util.find_spec('lingmo-installer.frontend.%s' % f) is not None:
+            if util.find_spec('lingmo_installer.frontend.%s' % f) is not None:
                 self.frontend = f
                 break
         if self.frontend is None:
             raise AttributeError('No frontend available; tried %s' %
                                  ', '.join(frontend_names))
 
-        db = DebconfCommunicator('lingmo-installer', cloexec=True)
+        db = DebconfCommunicator('lingmo_installer', cloexec=True)
         try:
             self.force_failsafe = create_bool(
-                db.get('lingmo-installer/force_failsafe_graphics'))
+                db.get('lingmo_installer/force_failsafe_graphics'))
         except debconf.DebconfError:
             self.force_failsafe = False
         db.shutdown()
@@ -260,7 +260,7 @@ class DM:
 
     def run(self, *program):
         # Extract the program basename to see if we are in oem-config or
-        # lingmo-installer.
+        # lingmo_installer.
         program_basename = os.path.basename(program[0])
 
         extras = []
@@ -362,7 +362,7 @@ EndSection
         log('set vars')
         os.environ['DISPLAY'] = self.display
         os.environ['HOME'] = self.homedir
-        # Give lingmo-installer a UID and GID that it can drop privileges to.
+        # Give lingmo_installer a UID and GID that it can drop privileges to.
         os.environ['PKEXEC_UID'] = str(self.uid)
         os.environ['GVFS_DISABLE_FUSE'] = '1'
 
@@ -370,14 +370,14 @@ EndSection
         self.pam_open_session()
 
         # run simple, custom scripts during install time
-        if program_basename == 'lingmo-installer':
+        if program_basename == 'lingmo_installer':
             log('dm-scripts')
-            self.run_hooks('/usr/lib/lingmo-installer/dm-scripts/install')
+            self.run_hooks('/usr/lib/lingmo_installer/dm-scripts/install')
 
         # run simple, custom scripts during  oem-config
         if program_basename == 'oem-config-wrapper':
             log('oem dm-scripts')
-            self.run_hooks('/usr/lib/lingmo-installer/dm-scripts/oem')
+            self.run_hooks('/usr/lib/lingmo_installer/dm-scripts/oem')
 
         # Session bus, apparently needed by most interfaces now
         if ('DBUS_SESSION_BUS_ADDRESS' not in os.environ and
@@ -577,8 +577,8 @@ EndSection
                         stdin=null, stdout=logfile, stderr=logfile,
                         preexec_fn=self.drop_privileges)
 
-            if (accessibility or 'maybe-lingmo-installer' in proc_cmdline or
-                    'only-lingmo-installer' in proc_cmdline or
+            if (accessibility or 'maybe-lingmo_installer' in proc_cmdline or
+                    'only-lingmo_installer' in proc_cmdline or
                     program_basename == 'oem-config-wrapper'):
                 launcher = '/usr/lib/at-spi2-core/at-spi-bus-launcher'
                 if os.path.exists(launcher):
@@ -592,7 +592,7 @@ EndSection
                         os.environ['GTK_MODULES'] = 'gail'
 
             if osextras.find_on_path('gnome-shell'):
-                wm_cmd = ['gnome-shell', '--sm-disable', '--mode=lingmo-installer']
+                wm_cmd = ['gnome-shell', '--sm-disable', '--mode=lingmo_installer']
             elif osextras.find_on_path('budgie-wm'):
                 wm_cmd = ['budgie-wm', '--sm-disable']
             elif osextras.find_on_path('marco'):
@@ -638,7 +638,7 @@ EndSection
                     stdin=null, stdout=logfile, stderr=logfile,
                     preexec_fn=self.drop_privileges))
 
-            if os.path.exists('/usr/lib/lingmo-installer/panel'):
+            if os.path.exists('/usr/lib/lingmo_installer/panel'):
                 if ("openbox-llingmo" not in wm_cmd and
                         "openbox" not in wm_cmd and
                         "gnome-shell" not in wm_cmd and
@@ -658,7 +658,7 @@ EndSection
                             'indicator-power/indicator-power-service',
                         )]))
                     extras.append(subprocess.Popen(
-                        ['/usr/lib/lingmo-installer/panel'],
+                        ['/usr/lib/lingmo_installer/panel'],
                         stdin=null, stdout=logfile, stderr=logfile,
                         preexec_fn=self.drop_privileges))
                     for indicator in indicators:
@@ -681,7 +681,7 @@ EndSection
                     stdin=null, stdout=logfile, stderr=logfile,
                     preexec_fn=self.drop_privileges))
 
-            # Simply start bluetooth-applet, lingmo-installer-bluetooth-agent will
+            # Simply start bluetooth-applet, lingmo_installer-bluetooth-agent will
             # override it from live to make sure it also covers the regular
             # live session
             if osextras.find_on_path('bluetooth-applet'):
@@ -714,12 +714,12 @@ EndSection
                 path = \
                     '/usr/share/wallpapers/Next/contents/images/2560x1600.jpg'
                 extras.append(subprocess.Popen(
-                    ['lingmo-installer-qtsetbg', path],
+                    ['lingmo_installer-qtsetbg', path],
                     stdin=null, stdout=logfile, stderr=logfile,
                     preexec_fn=self.drop_privileges))
 
-            log("add_lingmo-installer_kdedir")
-            add_lingmo-installer_kdedir()
+            log("add_lingmo_installer_kdedir")
+            add_lingmo_installer_kdedir()
             log('start kwin')
             if osextras.find_on_path('kwin'):
                 wm_cmd = ['kwin']
@@ -737,9 +737,9 @@ EndSection
 
         reboot = False
         if ret != 0:
-            db = DebconfCommunicator('lingmo-installer', cloexec=True)
+            db = DebconfCommunicator('lingmo_installer', cloexec=True)
             try:
-                error_cmd = db.get('lingmo-installer/failure_command')
+                error_cmd = db.get('lingmo_installer/failure_command')
                 if error_cmd:
                     subprocess.call(['sh', '-c', error_cmd])
             except debconf.DebconfError:
@@ -748,14 +748,14 @@ EndSection
             reboot = False
             try:
                 if '--automatic' in program:
-                    reboot = db.get('lingmo-installer/reboot_on_failure') == 'true'
+                    reboot = db.get('lingmo_installer/reboot_on_failure') == 'true'
             except debconf.DebconfError:
                 pass
 
             if reboot:
-                question = 'lingmo-installer/install_failed_reboot'
+                question = 'lingmo_installer/install_failed_reboot'
             else:
-                question = 'lingmo-installer/install_failed'
+                question = 'lingmo_installer/install_failed'
             title = ''
             message = ''
             try:

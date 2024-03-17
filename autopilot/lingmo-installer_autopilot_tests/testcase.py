@@ -30,8 +30,8 @@ from testtools.matchers import (
 )
 from testtools.content import text_content
 
-from lingmo-installer_autopilot_tests.tools import compare
-from lingmo-installer_autopilot_tests.exception import (
+from lingmo_installer_autopilot_tests.tools import compare
+from lingmo_installer_autopilot_tests.exception import (
     NonFatalErrors,
     FatalError
 )
@@ -40,10 +40,10 @@ from lingmo-installer_autopilot_tests.exception import (
 logger = logging.getLogger(__name__)
 
 
-class Lingmo-installerTestCase(AutopilotTestCase):
+class Lingmo_installerTestCase(AutopilotTestCase):
 
     def setUp(self):
-        super(Lingmo-installerTestCase, self).setUp()
+        super(Lingmo_installerTestCase, self).setUp()
         self.non_fatal_errors = []
         self.fatal_errors = []
 
@@ -54,7 +54,7 @@ class Lingmo-installerTestCase(AutopilotTestCase):
                 self.non_fatal_errors.append(error)
         self.assertNonFatalErrors()
         self.assertFatalErrors()
-        super(Lingmo-installerTestCase, self).tearDown()
+        super(Lingmo_installerTestCase, self).tearDown()
         unittest.TestCase.tearDown(self)
 
     def _compare_system_with_app_snapshot(self):

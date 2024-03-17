@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-from lingmo-installer import install_misc
+from lingmo_installer import install_misc
 
 
 class InstallMiscTests(unittest.TestCase):

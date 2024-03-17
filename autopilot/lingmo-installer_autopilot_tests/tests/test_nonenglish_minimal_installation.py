@@ -1,4 +1,4 @@
-# Testing Default Install for the Lingmo-installer Installer
+# Testing Default Install for the Lingmo_installer Installer
 # Author: Heber Parrucci <heber.parrucci@canonical.com>
 # Copyright (C) 2018
 #
@@ -13,13 +13,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from lingmo-installer_autopilot_tests.tests import Lingmo-installerAutopilotTestCase
+from lingmo_installer_autopilot_tests.tests import Lingmo_installerAutopilotTestCase
 from testtools.matchers import Equals
 from autopilot.matchers import Eventually
-from lingmo-installer_autopilot_tests.emulators import gtktoplevel
+from lingmo_installer_autopilot_tests.emulators import gtktoplevel
 
 
-class NonEnglishMinimalInstallationTestCase(Lingmo-installerAutopilotTestCase):
+class NonEnglishMinimalInstallationTestCase(Lingmo_installerAutopilotTestCase):
     """
     Test choosing Non English and minimal installation option
     """

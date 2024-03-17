@@ -11,10 +11,10 @@ from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
 # we could use this as the base for the MockController as well
-#   from lingmo-installer.frontend.base import Controller
+#   from lingmo_installer.frontend.base import Controller
 
 # for testing online status
-#from lingmo-installer.misc import add_connection_watch
+#from lingmo_installer.misc import add_connection_watch
 
 
 class MockController(object):
@@ -56,12 +56,12 @@ if __name__ == "__main__":
 
     # setup env
     for envvar, path in (
-            ("LINGMO-INSTALLER_PLUGIN_PATH", "./lingmo-installer/plugins"),
-            ("LINGMO-INSTALLER_GLADE", "./gui/gtk")):
+            ("lingmo_installer_PLUGIN_PATH", "./lingmo_installer/plugins"),
+            ("lingmo_installer_GLADE", "./gui/gtk")):
         if os.path.exists(path):
             os.environ[envvar] = path
     # ... and then import the plugin_manager
-    from lingmo-installer.plugin_manager import load_plugin
+    from lingmo_installer.plugin_manager import load_plugin
 
     plugin_name = sys.argv[1]
     plugin_module = load_plugin(plugin_name)

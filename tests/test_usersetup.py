@@ -3,10 +3,10 @@
 
 import unittest
 
-from gi.repository import Lingmo-installerMockResolver
+from gi.repository import Lingmo_installerMockResolver
 import mock
 
-from lingmo-installer import gtkwidgets, plugin_manager
+from lingmo_installer import gtkwidgets, plugin_manager
 
 
 def mock_get_string(name, lang=None, prefix=None):
@@ -15,9 +15,9 @@ def mock_get_string(name, lang=None, prefix=None):
 
 class UserSetupTests(unittest.TestCase):
     def setUp(self):
-        for obj in ('lingmo-installer.misc.execute',
-                    'lingmo-installer.misc.execute_root',
-                    'lingmo-installer.misc.dmimodel'):
+        for obj in ('lingmo_installer.misc.execute',
+                    'lingmo_installer.misc.execute_root',
+                    'lingmo_installer.misc.dmimodel'):
             patcher = mock.patch(obj)
             patcher.start()
             self.addCleanup(patcher.stop)
@@ -28,7 +28,7 @@ class UserSetupTests(unittest.TestCase):
         self.gtk = self.ubi_usersetup.PageGtk(controller)
 
     def test_hostname_check(self):
-        self.gtk.resolver = Lingmo-installerMockResolver.MockResolver(
+        self.gtk.resolver = Lingmo_installerMockResolver.MockResolver(
             hostname='myhostname')
         self.gtk.hostname_ok.show()
         self.gtk.hostname.set_text('ahostnamethatdoesntexistonthenetwork')
@@ -39,7 +39,7 @@ class UserSetupTests(unittest.TestCase):
 
     def test_hostname_check_exists(self):
         error_msg = 'That name already exists on the network.'
-        self.gtk.resolver = Lingmo-installerMockResolver.MockResolver(
+        self.gtk.resolver = Lingmo_installerMockResolver.MockResolver(
             hostname='myhostname')
         self.gtk.plugin_translate('en')
         self.gtk.hostname_ok.show()
@@ -51,7 +51,7 @@ class UserSetupTests(unittest.TestCase):
         self.gtk.hostname_error.assert_called_with(error_msg)
 
     def test_hostname_check_bogus_dns(self):
-        self.gtk.resolver = Lingmo-installerMockResolver.MockResolver(
+        self.gtk.resolver = Lingmo_installerMockResolver.MockResolver(
             hostname='myhostname')
         self.gtk.detect_bogus_result('myhostname')
         gtkwidgets.refresh()
@@ -91,7 +91,7 @@ class UserSetupTests(unittest.TestCase):
 
     def test_unicode(self):
         # i18n needs to be imported to register ascii_transliterate
-        from lingmo-installer import i18n
+        from lingmo_installer import i18n
         assert i18n  # silence, pyflakes
 
         self.gtk.controller.get_string = mock_get_string

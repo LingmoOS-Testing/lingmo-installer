@@ -229,7 +229,7 @@ setup_tests() {
 
     cat>$AP_INFO<<EOF
 Image Id:      $(cat /cdrom/.disk/info)
-Lingmo-installer:      $(dpkg-query -f '${Version}' -W lingmo-installer)
+Lingmo_installer:      $(dpkg-query -f '${Version}' -W lingmo-installer)
 Test branch:   ${TSBRANCH}
 EOF
     
@@ -291,7 +291,7 @@ run_tests() {
     touch $AP_LOGFILE
     tail_logs $AP_LOGFILE
 
-    echo "I: Launching Lingmo-installer"
+    echo "I: Launching Lingmo_installer"
     cd $TSEXPORT/autopilot
     sudo dbus-launch lingmo-installer --autopilot &
     sleep 30

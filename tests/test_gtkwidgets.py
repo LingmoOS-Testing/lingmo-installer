@@ -10,8 +10,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, TimezoneMap
 import mock
 
-from lingmo-installer import gtkwidgets, nm, segmented_bar
-from lingmo-installer.frontend.gtk_components import nmwidgets
+from lingmo_installer import gtkwidgets, nm, segmented_bar
+from lingmo_installer.frontend.gtk_components import nmwidgets
 
 
 class MockController(object):
@@ -191,7 +191,7 @@ ID_MM_CANDIDATE=1
 
 class NetworkManagerTests(unittest.TestCase):
     def setUp(self):
-        patcher = mock.patch('lingmo-installer.nm.NetworkManager.start')
+        patcher = mock.patch('lingmo_installer.nm.NetworkManager.start')
         patcher.start()
         self.addCleanup(patcher.stop)
         self.model = nmwidgets.GtkNetworkStore()

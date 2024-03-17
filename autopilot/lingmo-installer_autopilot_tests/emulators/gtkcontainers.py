@@ -18,8 +18,8 @@
 import random
 import time
 from autopilot.input import Pointer, Mouse, Keyboard
-from lingmo-installer_autopilot_tests.emulators import AutopilotGtkEmulatorBase
-from lingmo-installer_autopilot_tests.tools.compare import expectThat
+from lingmo_installer_autopilot_tests.emulators import AutopilotGtkEmulatorBase
+from lingmo_installer_autopilot_tests.tools.compare import expectThat
 import logging
 logger = logging.getLogger(__name__)
 

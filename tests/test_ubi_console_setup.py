@@ -6,7 +6,7 @@ import unittest.mock
 
 import debconf
 
-from lingmo-installer import plugin_manager
+from lingmo_installer import plugin_manager
 
 ubi_console_setup = plugin_manager.load_plugin("ubi-console-setup")
 

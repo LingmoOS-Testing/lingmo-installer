@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <matrix-project>
   <actions/>
-  <description>Run Lingmo-installer test `{{ testcase }}' against daily development image of {{ flavor|capitalize() }}&lt;br/&gt;&#xd;
+  <description>Run Lingmo_installer test `{{ testcase }}' against daily development image of {{ flavor|capitalize() }}&lt;br/&gt;&#xd;
   - Owner: Lingmo QA Team - Lingmo Community Team&lt;br/&gt;&#xd;
   - Contacts: balloons, DanChapman or jibel on #lingmo-quality on freenode &lt;br/&gt;&#xd;</description>
   <logRotator>

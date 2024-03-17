@@ -11,7 +11,7 @@ import unittest
 from gi.repository import Gtk
 import mock
 
-from lingmo-installer import i18n, plugin_manager
+from lingmo_installer import i18n, plugin_manager
 
 
 def side_effect_factory(real_method):
@@ -29,7 +29,7 @@ def side_effect_factory(real_method):
 
 class OEMUserLanguageTests(unittest.TestCase):
     def setUp(self):
-        for obj in ('lingmo-installer.misc.execute', 'lingmo-installer.misc.execute_root'):
+        for obj in ('lingmo_installer.misc.execute', 'lingmo_installer.misc.execute_root'):
             patcher = mock.patch(obj)
             patcher.start()
             self.addCleanup(patcher.stop)
@@ -76,7 +76,7 @@ class OEMUserLanguageTests(unittest.TestCase):
 
 class LanguageTests(unittest.TestCase):
     def setUp(self):
-        for obj in ('lingmo-installer.misc.execute', 'lingmo-installer.misc.execute_root'):
+        for obj in ('lingmo_installer.misc.execute', 'lingmo_installer.misc.execute_root'):
             patcher = mock.patch(obj)
             patcher.start()
             self.addCleanup(patcher.stop)
@@ -94,7 +94,7 @@ class LanguageTests(unittest.TestCase):
             self.gtk = self.ubi_language.PageGtk(self.controller)
 
     def test_try_lingmo_clicks(self):
-        from lingmo-installer import gtkwidgets
+        from lingmo_installer import gtkwidgets
 
         # Ensure that the mock changes state correctly.
         self.controller.allowed_change_step.return_value = True

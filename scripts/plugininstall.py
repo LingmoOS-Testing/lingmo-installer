@@ -40,10 +40,10 @@ import apt_pkg
 from apt.cache import Cache, FetchFailedException
 import debconf
 
-sys.path.insert(0, '/usr/lib/lingmo-installer')
+sys.path.insert(0, '/usr/lib/lingmo_installer')
 
-from lingmo-installer import install_misc, misc, osextras, plugin_manager
-from lingmo-installer.components import apt_setup, check_kernels, hw_detect
+from lingmo_installer import install_misc, misc, osextras, plugin_manager
+from lingmo_installer.components import apt_setup, check_kernels, hw_detect
 
 
 HOSTS_TEXT = """\
@@ -98,8 +98,8 @@ class Install(install_misc.InstallBase):
 
         # Get langpacks from install
         self.langpacks = []
-        if os.path.exists('/var/lib/lingmo-installer/langpacks'):
-            with open('/var/lib/lingmo-installer/langpacks') as langpacks:
+        if os.path.exists('/var/lib/lingmo_installer/langpacks'):
+            with open('/var/lib/lingmo_installer/langpacks') as langpacks:
                 for line in langpacks:
                     self.langpacks.append(line.strip())
 
@@ -175,18 +175,18 @@ class Install(install_misc.InstallBase):
         self.end = self.start + 22 + len(self.plugins)
 
         self.db.progress(
-            'START', self.start, self.end, 'lingmo-installer/install/title')
+            'START', self.start, self.end, 'lingmo_installer/install/title')
 
         self.configure_python()
 
         self.next_region()
-        self.db.progress('INFO', 'lingmo-installer/install/network')
+        self.db.progress('INFO', 'lingmo_installer/install/network')
         self.configure_network()
 
         self.configure_locale()
 
         self.next_region()
-        self.db.progress('INFO', 'lingmo-installer/install/apt')
+        self.db.progress('INFO', 'lingmo_installer/install/apt')
         self.configure_apt()
 
         self.configure_plugins()
@@ -209,15 +209,15 @@ class Install(install_misc.InstallBase):
         self.remove_unusable_kernels()
 
         self.next_region(size=4)
-        self.db.progress('INFO', 'lingmo-installer/install/hardware')
+        self.db.progress('INFO', 'lingmo_installer/install/hardware')
         self.configure_hardware()
 
         # Tell apt-install to install packages directly from now on.
-        with open('/var/lib/lingmo-installer/apt-install-direct', 'w'):
+        with open('/var/lib/lingmo_installer/apt-install-direct', 'w'):
             pass
 
         self.next_region()
-        self.db.progress('INFO', 'lingmo-installer/install/installing')
+        self.db.progress('INFO', 'lingmo_installer/install/installing')
 
         if 'LINGMO-INSTALLER_OEM_USER_CONFIG' in os.environ:
             self.install_oem_extras()
@@ -228,17 +228,17 @@ class Install(install_misc.InstallBase):
         self.configure_zsys()
 
         self.next_region()
-        self.db.progress('INFO', 'lingmo-installer/install/activedirectory')
+        self.db.progress('INFO', 'lingmo_installer/install/activedirectory')
         self.configure_active_directory()
 
         self.next_region()
-        self.db.progress('INFO', 'lingmo-installer/install/bootloader')
+        self.db.progress('INFO', 'lingmo_installer/install/bootloader')
         self.copy_mok()
         self.configure_recovery_key()
         self.configure_bootloader()
 
         self.next_region(size=4)
-        self.db.progress('INFO', 'lingmo-installer/install/removing')
+        self.db.progress('INFO', 'lingmo_installer/install/removing')
         if 'LINGMO-INSTALLER_OEM_USER_CONFIG' in os.environ:
             try:
                 if misc.create_bool(self.db.get('oem-config/remove_extras')):
@@ -260,7 +260,7 @@ class Install(install_misc.InstallBase):
                 'Could not copy the network configuration:')
             for line in traceback.format_exc().split('\n'):
                 syslog.syslog(syslog.LOG_WARNING, line)
-            self.db.input('critical', 'lingmo-installer/install/broken_network_copy')
+            self.db.input('critical', 'lingmo_installer/install/broken_network_copy')
             self.db.go()
         try:
             self.copy_bluetooth_config()
@@ -270,7 +270,7 @@ class Install(install_misc.InstallBase):
                 'Could not copy the bluetooth configuration:')
             for line in traceback.format_exc().split('\n'):
                 syslog.syslog(syslog.LOG_WARNING, line)
-            self.db.input('critical', 'lingmo-installer/install/broken_bluetooth_copy')
+            self.db.input('critical', 'lingmo_installer/install/broken_bluetooth_copy')
             self.db.go()
         try:
             self.recache_apparmor()
@@ -289,7 +289,7 @@ class Install(install_misc.InstallBase):
         self.copy_dcd()
 
         self.db.progress('SET', self.count)
-        self.db.progress('INFO', 'lingmo-installer/install/log_files')
+        self.db.progress('INFO', 'lingmo_installer/install/log_files')
         self.copy_logs()
         self.save_random_seed()
 
@@ -475,7 +475,7 @@ class Install(install_misc.InstallBase):
         """Run a single install plugin."""
         self.next_region()
         # set a generic info message in case plugin doesn't provide one
-        self.db.progress('INFO', 'lingmo-installer/install/title')
+        self.db.progress('INFO', 'lingmo_installer/install/title')
         inst = plugin.Install(None, db=self.db)
         ret = inst.install(self.target, PluginProgress(self.db))
         if ret:
@@ -591,7 +591,7 @@ class Install(install_misc.InstallBase):
                 "AptSetup failed with code %d" % ret)
 
     def run_target_config_hooks(self):
-        """Run hook scripts from /usr/lib/lingmo-installer/target-config.
+        """Run hook scripts from /usr/lib/lingmo_installer/target-config.
 
         This allows live to hook into us and repeat bits of its
         configuration in the target system.
@@ -599,14 +599,14 @@ class Install(install_misc.InstallBase):
         if 'LINGMO-INSTALLER_OEM_USER_CONFIG' in os.environ:
             return  # These were already run once during install
 
-        hookdir = '/usr/lib/lingmo-installer/target-config'
+        hookdir = '/usr/lib/lingmo_installer/target-config'
 
         if os.path.isdir(hookdir):
             # Exclude hooks containing '.', so that *.dpkg-* et al are avoided.
             hooks = [entry for entry in os.listdir(hookdir)
                      if '.' not in entry]
-            self.db.progress('START', 0, len(hooks), 'lingmo-installer/install/title')
-            self.db.progress('INFO', 'lingmo-installer/install/target_hooks')
+            self.db.progress('START', 0, len(hooks), 'lingmo_installer/install/title')
+            self.db.progress('INFO', 'lingmo_installer/install/target_hooks')
             for hookentry in hooks:
                 hook = os.path.join(hookdir, hookentry)
                 syslog.syslog('running %s' % hook)
@@ -614,7 +614,7 @@ class Install(install_misc.InstallBase):
                     self.db.progress('STEP', 1)
                     continue
                 # Errors are ignored at present, although this may change.
-                subprocess.call(['log-output', '-t', 'lingmo-installer',
+                subprocess.call(['log-output', '-t', 'lingmo_installer',
                                  '--pass-stdout', hook])
                 self.db.progress('STEP', 1)
             self.db.progress('STOP')
@@ -627,7 +627,7 @@ class Install(install_misc.InstallBase):
         self.verify_language_packs()
 
     def verify_language_packs(self):
-        if os.path.exists('/var/lib/lingmo-installer/no-install-langpacks'):
+        if os.path.exists('/var/lib/lingmo_installer/no-install-langpacks'):
             return  # always complete enough
 
         if self.db.get('pkgsel/ignore-incomplete-language-support') == 'true':
@@ -685,9 +685,9 @@ class Install(install_misc.InstallBase):
         if 'LINGMO-INSTALLER_OEM_USER_CONFIG' in os.environ:
             return
 
-        self.db.progress('START', 0, 5, 'lingmo-installer/install/title')
+        self.db.progress('START', 0, 5, 'lingmo_installer/install/title')
 
-        self.db.progress('INFO', 'lingmo-installer/install/find_removables')
+        self.db.progress('INFO', 'lingmo_installer/install/find_removables')
 
         # Check for kernel packages to remove.
         dbfilter = check_kernels.CheckKernels(None, self.db)
@@ -696,7 +696,7 @@ class Install(install_misc.InstallBase):
         install_kernels = set()
         new_kernel_pkg = None
         new_kernel_version = None
-        install_kernels_path = "/var/lib/lingmo-installer/install-kernels"
+        install_kernels_path = "/var/lib/lingmo_installer/install-kernels"
         if os.path.exists(install_kernels_path):
             with open(install_kernels_path) as install_kernels_file:
                 for line in install_kernels_file:
@@ -719,7 +719,7 @@ class Install(install_misc.InstallBase):
             install_kernels_file.close()
 
         remove_kernels = set()
-        remove_kernels_path = "/var/lib/lingmo-installer/remove-kernels"
+        remove_kernels_path = "/var/lib/lingmo_installer/remove-kernels"
         if os.path.exists(remove_kernels_path):
             with open(remove_kernels_path) as remove_kernels_file:
                 for line in remove_kernels_file:
@@ -777,16 +777,16 @@ class Install(install_misc.InstallBase):
             install_misc.chroot_cleanup(self.target)
         self.nested_progress_end()
 
-        self.db.progress('INFO', 'lingmo-installer/install/hardware')
+        self.db.progress('INFO', 'lingmo_installer/install/hardware')
 
-        script = '/usr/lib/lingmo-installer/debian-installer-utils' \
+        script = '/usr/lib/lingmo_installer/debian-installer-utils' \
                  '/register-module.post-base-installer'
         if 'LINGMO-INSTALLER_OEM_USER_CONFIG' in os.environ:
             script += '-oem'
         misc.execute(script)
 
         osextras.unlink_force(self.target_file('etc/papersize'))
-        subprocess.call(['log-output', '-t', 'lingmo-installer', 'chroot', self.target,
+        subprocess.call(['log-output', '-t', 'lingmo_installer', 'chroot', self.target,
                          'ucf', '--purge', '/etc/papersize'],
                         preexec_fn=install_misc.debconf_disconnect,
                         close_fds=True)
@@ -807,7 +807,7 @@ class Install(install_misc.InstallBase):
 
         install_misc.chroot_setup(self.target, x11=True)
         install_misc.chrex(
-            self.target, 'dpkg-divert', '--package', 'lingmo-installer', '--rename',
+            self.target, 'dpkg-divert', '--package', 'lingmo_installer', '--rename',
             '--quiet', '--add', '/usr/sbin/update-initramfs')
         try:
             os.symlink(
@@ -827,7 +827,7 @@ class Install(install_misc.InstallBase):
             osextras.unlink_force(
                 self.target_file('usr/sbin/update-initramfs'))
             install_misc.chrex(
-                self.target, 'dpkg-divert', '--package', 'lingmo-installer',
+                self.target, 'dpkg-divert', '--package', 'lingmo_installer',
                 '--rename', '--quiet', '--remove',
                 '/usr/sbin/update-initramfs')
             install_misc.chrex(
@@ -880,8 +880,8 @@ class Install(install_misc.InstallBase):
                 os.symlink(linksrc, linkdst)
 
     def configure_recovery_key(self):
-        crypto_key = self.db.get('lingmo-installer/crypto_key')
-        recovery_key = self.db.get('lingmo-installer/recovery_key')
+        crypto_key = self.db.get('lingmo_installer/crypto_key')
+        recovery_key = self.db.get('lingmo_installer/recovery_key')
         if not crypto_key or not recovery_key:
             self.clean_crypto_keys()
             return
@@ -894,7 +894,7 @@ class Install(install_misc.InstallBase):
                 'Determining installation disk failed. '
                 'Setting a recovery key is supported only with partman-auto.')
             self.clean_crypto_keys()
-            self.db.input('critical', 'lingmo-installer/install/broken_luks_add_key')
+            self.db.input('critical', 'lingmo_installer/install/broken_luks_add_key')
             self.db.go()
             return
 
@@ -909,14 +909,14 @@ class Install(install_misc.InstallBase):
             syslog.syslog(syslog.LOG_ERR, ' '.join(args))
             syslog.syslog(syslog.LOG_ERR, 'determining crypto device failed. Output: %s' % lsblk_out)
             self.clean_crypto_keys()
-            self.db.input('critical', 'lingmo-installer/install/broken_luks_add_key')
+            self.db.input('critical', 'lingmo_installer/install/broken_luks_add_key')
             self.db.go()
             return
         syslog.syslog(' '.join(args))
 
         key_args = "%s\n%s" % (crypto_key, recovery_key)
         try:
-            log_args = ['log-output', '-t', 'lingmo-installer']
+            log_args = ['log-output', '-t', 'lingmo_installer']
             log_args.extend(['cryptsetup', 'luksAddKey', dev])
             p = subprocess.run(log_args, input=key_args, encoding="utf-8")
         except subprocess.CalledProcessError as e:
@@ -928,15 +928,15 @@ class Install(install_misc.InstallBase):
 
         if p.returncode != 0:
             syslog.syslog(syslog.LOG_ERR, ' '.join(log_args))
-            self.db.input('critical', 'lingmo-installer/install/broken_luks_add_key')
+            self.db.input('critical', 'lingmo_installer/install/broken_luks_add_key')
             self.db.go()
             return
 
         syslog.syslog(' '.join(log_args))
 
     def clean_crypto_keys(self):
-        self.db.set('lingmo-installer/crypto_key', '')
-        self.db.set('lingmo-installer/recovery_key', '')
+        self.db.set('lingmo_installer/crypto_key', '')
+        self.db.set('lingmo_installer/recovery_key', '')
 
     def configure_bootloader(self):
         """Configure and install the boot loader."""
@@ -953,7 +953,7 @@ class Install(install_misc.InstallBase):
                     break
             return
 
-        inst_boot = self.db.get('lingmo-installer/install_bootloader')
+        inst_boot = self.db.get('lingmo_installer/install_bootloader')
         if inst_boot == 'true' and 'LINGMO-INSTALLER_NO_BOOTLOADER' not in os.environ:
             binds = ("/proc", "/sys", "/dev", "/run",
                      "/sys/firmware/efi/efivars")
@@ -964,7 +964,7 @@ class Install(install_misc.InstallBase):
 
             try:
                 if arch in ('amd64', 'arm64', 'i386'):
-                    from lingmo-installer.components import grubinstaller
+                    from lingmo_installer.components import grubinstaller
                     while 1:
                         dbfilter = grubinstaller.GrubInstaller(None, self.db)
                         ret = dbfilter.run_command(auto_process=True)
@@ -973,7 +973,7 @@ class Install(install_misc.InstallBase):
                                 "GrubInstaller failed with code %d" % ret)
                         elif ret != 0:
                             old_bootdev = self.db.get('grub-installer/bootdev')
-                            bootdev = 'lingmo-installer/install/new-bootdev'
+                            bootdev = 'lingmo_installer/install/new-bootdev'
                             self.db.fset(bootdev, 'seen', 'false')
                             self.db.set(bootdev, old_bootdev)
                             self.db.input('critical', bootdev)
@@ -1007,13 +1007,13 @@ class Install(install_misc.InstallBase):
 
     def configure_zsys(self):
         """ Configure zsys """
-        use_zfs = self.db.get('lingmo-installer/use_zfs')
+        use_zfs = self.db.get('lingmo_installer/use_zfs')
         if use_zfs:
-            misc.execute_root('/usr/share/lingmo-installer/zsys-setup', 'finalize')
+            misc.execute_root('/usr/share/lingmo_installer/zsys-setup', 'finalize')
 
     def configure_active_directory(self):
         """ Join Active Directory domain and enable pam_mkhomedir """
-        use_directory = self.db.get('lingmo-installer/login_use_directory')
+        use_directory = self.db.get('lingmo_installer/login_use_directory')
         if use_directory != 'true':
             install_misc.record_removed(['adcli', 'realmd', 'sssd'], recursive=True)
             return
@@ -1027,9 +1027,9 @@ class Install(install_misc.InstallBase):
         # Set hostname for AD to determine FQDN (no fqdn option in realm join, only adcli)
         misc.execute_root('hostname', hostname_new)
 
-        directory_domain = self.db.get('lingmo-installer/directory_domain')
-        directory_user = self.db.get('lingmo-installer/directory_user')
-        directory_passwd = self.db.get('lingmo-installer/directory_passwd')
+        directory_domain = self.db.get('lingmo_installer/directory_domain')
+        directory_user = self.db.get('lingmo_installer/directory_user')
+        directory_passwd = self.db.get('lingmo_installer/directory_passwd')
 
         binds = ("/proc", "/sys", "/dev", "/run")
         try:
@@ -1037,7 +1037,7 @@ class Install(install_misc.InstallBase):
                 misc.execute('mount', '--bind', bind, self.target + bind)
             # join AD on host (services are running on host)
             if not self.join_domain(hostname_new, directory_domain, directory_user, directory_passwd):
-                self.db.input('critical', 'lingmo-installer/install/broken_active_directory')
+                self.db.input('critical', 'lingmo_installer/install/broken_active_directory')
                 self.db.go()
             install_misc.record_removed(['adcli'], recursive=True)
         finally:
@@ -1052,12 +1052,12 @@ class Install(install_misc.InstallBase):
                                    '--package', '--enable', 'mkhomedir'],
                                   preexec_fn=install_misc.debconf_disconnect)
         except subprocess.CalledProcessError:
-            self.db.input('critical', 'lingmo-installer/install/broken_active_directory')
+            self.db.input('critical', 'lingmo_installer/install/broken_active_directory')
             self.db.go()
 
     def join_domain(self, hostname, directory_domain, directory_user, directory_passwd):
         """ Join an Active Directory domain """
-        log_args = ['log-output', '-t', 'lingmo-installer']
+        log_args = ['log-output', '-t', 'lingmo_installer']
         log_args.extend(['realm', 'join', '--install', self.target,
                          '--user', directory_user, '--computer-name', hostname,
                          '--unattended', directory_domain])
@@ -1107,13 +1107,13 @@ class Install(install_misc.InstallBase):
     def do_remove(self, to_remove, recursive=False):
         self.nested_progress_start()
 
-        self.db.progress('START', 0, 5, 'lingmo-installer/install/title')
-        self.db.progress('INFO', 'lingmo-installer/install/find_removables')
+        self.db.progress('START', 0, 5, 'lingmo_installer/install/title')
+        self.db.progress('INFO', 'lingmo_installer/install/find_removables')
 
         fetchprogress = install_misc.DebconfAcquireProgress(
-            self.db, 'lingmo-installer/install/title',
-            'lingmo-installer/install/apt_indices_starting',
-            'lingmo-installer/install/apt_indices')
+            self.db, 'lingmo_installer/install/title',
+            'lingmo_installer/install/apt_indices_starting',
+            'lingmo_installer/install/apt_indices')
         cache = Cache()
 
         if cache._depcache.broken_count > 0:
@@ -1136,11 +1136,11 @@ class Install(install_misc.InstallBase):
         self.db.progress('SET', 1)
         self.progress_region(1, 5)
         fetchprogress = install_misc.DebconfAcquireProgress(
-            self.db, 'lingmo-installer/install/title', None,
-            'lingmo-installer/install/fetch_remove')
+            self.db, 'lingmo_installer/install/title', None,
+            'lingmo_installer/install/fetch_remove')
         installprogress = install_misc.DebconfInstallProgress(
-            self.db, 'lingmo-installer/install/title', 'lingmo-installer/install/apt_info',
-            'lingmo-installer/install/apt_error_remove')
+            self.db, 'lingmo_installer/install/title', 'lingmo_installer/install/apt_info',
+            'lingmo_installer/install/apt_error_remove')
         install_misc.chroot_setup(self.target)
         commit_error = None
         try:
@@ -1166,11 +1166,11 @@ class Install(install_misc.InstallBase):
             brokenpkgs = install_misc.broken_packages(cache)
             syslog.syslog('broken packages after removal: '
                           '%s' % ', '.join(brokenpkgs))
-            self.db.subst('lingmo-installer/install/broken_remove', 'ERROR',
+            self.db.subst('lingmo_installer/install/broken_remove', 'ERROR',
                           commit_error)
-            self.db.subst('lingmo-installer/install/broken_remove', 'PACKAGES',
+            self.db.subst('lingmo_installer/install/broken_remove', 'PACKAGES',
                           ', '.join(brokenpkgs))
-            self.db.input('critical', 'lingmo-installer/install/broken_remove')
+            self.db.input('critical', 'lingmo_installer/install/broken_remove')
             self.db.go()
 
         self.db.progress('STOP')
@@ -1266,9 +1266,9 @@ class Install(install_misc.InstallBase):
 
     def install_restricted_extras(self):
         packages = []
-        if self.db.get('lingmo-installer/use_nonfree') == 'true':
-            self.db.progress('INFO', 'lingmo-installer/install/nonfree')
-            packages.extend(self.db.get('lingmo-installer/nonfree_package').split())
+        if self.db.get('lingmo_installer/use_nonfree') == 'true':
+            self.db.progress('INFO', 'lingmo_installer/install/nonfree')
+            packages.extend(self.db.get('lingmo_installer/nonfree_package').split())
         # also install recorded non-free packages
         packages.extend(install_misc.query_recorded_installed())
         self.do_install(packages)
@@ -1310,7 +1310,7 @@ class Install(install_misc.InstallBase):
         # An ordered list from the set() to avoid the random dependencies failure.
         self.do_install(sorted(filtered_extra_packages))
 
-        if self.db.get('lingmo-installer/install_oem') == 'true':
+        if self.db.get('lingmo_installer/install_oem') == 'true':
             try:
                 # If we installed any OEM metapackages, we should try to update /
                 # upgrade them to their versions in the OEM archive.
@@ -1389,11 +1389,11 @@ class Install(install_misc.InstallBase):
                         self.db)
                 # in an automated install, this key needs to carry over
                 installable_lang = self.db.get(
-                    'lingmo-installer/only-show-installable-languages')
+                    'lingmo_installer/only-show-installable-languages')
                 if installable_lang:
                     install_misc.set_debconf(
                         self.target,
-                        'lingmo-installer/only-show-installable-languages',
+                        'lingmo_installer/only-show-installable-languages',
                         installable_lang, self.db)
         except debconf.DebconfError:
             pass
@@ -1404,11 +1404,11 @@ class Install(install_misc.InstallBase):
         Try to remove packages that were not part of the base install and
         are not needed by the final system.
 
-        This is roughly the set of packages installed by lingmo-installer + packages
+        This is roughly the set of packages installed by lingmo_installer + packages
         we explicitly installed in oem-config (langpacks, for example) -
         everything else.
         """
-        manifest = '/var/lib/lingmo-installer/installed-packages'
+        manifest = '/var/lib/lingmo_installer/installed-packages'
         if not os.path.exists(manifest):
             return
 
@@ -1418,7 +1418,7 @@ class Install(install_misc.InstallBase):
                 if line.strip() != '' and not line.startswith('#'):
                     keep.add(line.split()[0])
         # Let's not rip out the ground beneath our feet.
-        keep.add('lingmo-installer')
+        keep.add('lingmo_installer')
         keep.add('oem-config')
 
         cache = Cache()
@@ -1552,7 +1552,7 @@ class Install(install_misc.InstallBase):
             difference = set()
 
         # Add minimal installation package list if selected
-        if self.db.get('lingmo-installer/minimal_install') == 'true':
+        if self.db.get('lingmo_installer/minimal_install') == 'true':
             if os.path.exists(install_misc.minimal_install_rlist_path):
                 rm = set()
                 with open(install_misc.minimal_install_rlist_path) as m_file:
@@ -1615,9 +1615,9 @@ class Install(install_misc.InstallBase):
 
         if oem_remove_extras:
             installed = (desktop_packages | keep - regular - recursive)
-            if not os.path.exists(self.target_file('var/lib/lingmo-installer')):
-                os.makedirs(self.target_file('var/lib/lingmo-installer'))
-            p = self.target_file('var/lib/lingmo-installer/installed-packages')
+            if not os.path.exists(self.target_file('var/lib/lingmo_installer')):
+                os.makedirs(self.target_file('var/lib/lingmo_installer'))
+            p = self.target_file('var/lib/lingmo_installer/installed-packages')
             with open(p, 'w') as fp:
                 for line in installed:
                     print(line, file=fp)
@@ -1719,8 +1719,7 @@ class Install(install_misc.InstallBase):
             return
 
         live_user_home = os.path.expanduser('~%s' % live_user)
-        live_user_wallpaper_cache_dir = os.path.join(live_user_home,
-                                                       '.cache', 'wallpaper')
+        live_user_wallpaper_cache_dir = os.path.join(live_user_home, '.cache', 'wallpaper')
         target_user = self.db.get('passwd/username')
         target_user_cache_dir = self.target_file('home', target_user, '.cache')
         target_user_wallpaper_cache_dir = os.path.join(target_user_cache_dir,
@@ -1850,7 +1849,7 @@ class Install(install_misc.InstallBase):
 
         env = dict(os.environ)
         env['OVERRIDE_BASE_INSTALLABLE'] = '1'
-        subprocess.call(['/usr/lib/lingmo-installer/apt-setup/finish-install'],
+        subprocess.call(['/usr/lib/lingmo_installer/apt-setup/finish-install'],
                         env=env)
 
         for apt_conf in ('00NoMountCDROM', '00IgnoreTimeConflict',
@@ -1861,8 +1860,8 @@ class Install(install_misc.InstallBase):
 
 if __name__ == '__main__':
     os.environ['DPKG_UNTRANSLATED_MESSAGES'] = '1'
-    if not os.path.exists('/var/lib/lingmo-installer'):
-        os.makedirs('/var/lib/lingmo-installer')
+    if not os.path.exists('/var/lib/lingmo_installer'):
+        os.makedirs('/var/lib/lingmo_installer')
 
     install = Install()
     sys.excepthook = install_misc.excepthook

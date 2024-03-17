@@ -9,8 +9,8 @@ sys.path.insert(0, '.')
 
 # class BaseFrontendTests(unittest.TestCase):
 #     def setUp(self):
-#         from lingmo-installer.frontend import base
-#         self.frontend = base.BaseFrontend('lingmo-installer')
+#         from lingmo_installer.frontend import base
+#         self.frontend = base.BaseFrontend('lingmo_installer')
 #
 #     def tearDown(self):
 #         self.frontend.stop_debconf()
@@ -63,7 +63,7 @@ class CoreFrontendTests(unittest.TestCase):
 
 # class KdeFrontendTests(CoreFrontendTests):
 #     def setUp(self):
-#         from lingmo-installer.frontend import kde_ui
+#         from lingmo_installer.frontend import kde_ui
 #         self.ui = kde_ui
 #         self.frontend = kde_ui.Wizard('lingmo')
 
@@ -72,14 +72,14 @@ class CoreFrontendTests(unittest.TestCase):
 
 # class NoninteractiveFrontendTests(CoreFrontendTests):
 #     def setUp(self):
-#         from lingmo-installer.frontend import noninteractive
+#         from lingmo_installer.frontend import noninteractive
 #         self.ui = noninteractive
 #         self.frontend = noninteractive.Wizard('lingmo')
 
 
 class GtkFrontendTests(CoreFrontendTests):
     def setUp(self):
-        from lingmo-installer.frontend import gtk_ui
+        from lingmo_installer.frontend import gtk_ui
 
         self.ui = gtk_ui
         self.frontend = gtk_ui.Wizard('lingmo')

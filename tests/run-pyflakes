@@ -25,10 +25,10 @@ module_exclusions = [
 
 whitelist = [
     'bin/oem-config-remove-gtk',
-    'bin/lingmo-installer',
-    'bin/lingmo-installer-bluetooth-agent',
-    'bin/lingmo-installer-dm',
-    'bin/lingmo-installer-wrapper',
+    'bin/lingmo_installer',
+    'bin/lingmo_installer-bluetooth-agent',
+    'bin/lingmo_installer-dm',
+    'bin/lingmo_installer-wrapper',
     'tests/run',
     'tests/run-frontend',
     'tests/run-pyflakes',

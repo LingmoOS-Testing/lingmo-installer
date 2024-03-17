@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 from autopilot.input import Pointer, Mouse, Keyboard
-from lingmo-installer_autopilot_tests.emulators\
+from lingmo_installer_autopilot_tests.emulators\
     import AutopilotGtkEmulatorBase, EmulatorException
-from lingmo-installer_autopilot_tests.tools.compare import expectThat
-from lingmo-installer_autopilot_tests.emulators.partconfig\
+from lingmo_installer_autopilot_tests.tools.compare import expectThat
+from lingmo_installer_autopilot_tests.emulators.partconfig\
     import Config1, Config2, Config3
-from lingmo-installer_autopilot_tests.emulators.partconfig\
+from lingmo_installer_autopilot_tests.emulators.partconfig\
     import Config4, Config5, Config6
 import logging
 logger = logging.getLogger(__name__)

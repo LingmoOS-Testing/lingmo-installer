@@ -27,8 +27,8 @@ oem-config (1.55.0) karmic; urgency=low
 oem-config (1.54.13) jaunty; urgency=low
 
   [ Roman Shtylman ]
-  * Updated the timezone map from lingmo-installer (LP: #360652), including copying
-    CairoExtensions from lingmo-installer/segmented_bar.py.
+  * Updated the timezone map from lingmo_installer (LP: #360652), including copying
+    CairoExtensions from lingmo_installer/segmented_bar.py.
   * Moved common artwork files from oem-config-gtk/oem-config-kde to
     oem-config.
 
@@ -86,7 +86,7 @@ oem-config (1.54.10) jaunty; urgency=low
   [ Evan Dandrea ]
   * Update the timezone_map to match changes in lingmo-installer (more accurate
     city placement).
-  * Merge in the new KDE time zone map from lingmo-installer.  Thanks Roman
+  * Merge in the new KDE time zone map from lingmo_installer.  Thanks Roman
     Shtylman.
 
   [ Mario Limonciello ]
@@ -103,7 +103,7 @@ oem-config (1.54.9) jaunty; urgency=low
 
   [ Evan Dandrea ]
   * Add missing errno import.
-  * Merge in the new timezone widget from lingmo-installer (LP: #335557).
+  * Merge in the new timezone widget from lingmo_installer (LP: #335557).
   * Fix 'resize if too big for screen' logic (LP: #341758).  Thanks Michael
     Terry!
 
@@ -284,7 +284,7 @@ oem-config (1.52) intrepid; urgency=low
   * Automatic update of included source packages: user-setup 1.20lingmo10.
 
   [ Evan Dandrea ]
-  * Pull timezone map changes from lingmo-installer:
+  * Pull timezone map changes from lingmo_installer:
     - Iterate through a list of nearby timezones on click, rather than
       selecting the absolute closest timezone to the pointer.
     - Stop scrolling the timezone map once the mouse is outside its
@@ -487,7 +487,7 @@ oem-config (1.37.1) hardy-proposed; urgency=low
 
 oem-config (1.37) hardy; urgency=low
 
-  * Fix built-in lists of keyboard variant names (patch from lingmo-installer;
+  * Fix built-in lists of keyboard variant names (patch from lingmo_installer;
     LP: #106971).
 
  -- Colin Watson <cjwatson@lingmo.com>  Tue, 22 Apr 2008 09:59:27 +0100
@@ -511,7 +511,7 @@ oem-config (1.35) hardy; urgency=low
 oem-config (1.34) hardy; urgency=low
 
   * Port hiding the minimize button on the main window from Lingmo-installer.
-  * Port tzmap usability fixes from lingmo-installer.
+  * Port tzmap usability fixes from lingmo_installer.
   * Automatic update of included source packages: console-setup
     1.21lingmo7, localechooser 1.42lingmo5.
 
@@ -530,7 +530,7 @@ oem-config (1.32) hardy; urgency=low
   [ Evan Dandrea ]
   * Use a GtkEventBox rather than a GtkScrolledWindow for the tzmap to
     match lingmo-installer (LP: #198179)
-  * Port changes to zoommap.py from lingmo-installer:
+  * Port changes to zoommap.py from lingmo_installer:
     - Use a black border around tzmap points to assist the visually
       impaired.
     - Flash the currently selected location on the tzmap so that it's easier
@@ -541,14 +541,14 @@ oem-config (1.32) hardy; urgency=low
       widescreen displays (LP: #200152).
   * Center the oem-config window to match lingmo-installer.
   * Port fix for correctly answering the countrychooser/country-name question
-    from lingmo-installer (was LP #174937) (LP: #203648).
+    from lingmo_installer (was LP #174937) (LP: #203648).
   * Automatic update of included source packages: localechooser
     1.42lingmo3.
 
   [ Colin Watson ]
   * Ensure that our build fails if one of the d-i components fails to build.
   * Add a check-manifest tool to ensure that d-i/manifest is in sync with
-    d-i/source/ on upload (from lingmo-installer).
+    d-i/source/ on upload (from lingmo_installer).
   * Don't clean console-setup; bits of it are intentionally missing from our
     copy, and it's not necessary.
   * Now that we allow user creation even if a non-system user already
@@ -574,7 +574,7 @@ oem-config (1.31) hardy; urgency=low
     Torsten Spindler; LP: #153310).
 
   [ Evan Dandrea ]
-  * Port zoommap fixes from lingmo-installer.
+  * Port zoommap fixes from lingmo_installer.
   * Automatic update of included source packages: console-setup
     1.21lingmo4, user-setup 1.16lingmo5.
 
@@ -867,8 +867,8 @@ oem-config (1.9) feisty; urgency=low
   * Make OEM_CONFIG_DEBUG=1 imply DEBCONF_DEBUG='developer|filter' for ease
     of debugging.
   * Add a --debug option, equivalent to setting OEM_CONFIG_DEBUG=1.
-  * Add timezone widget from lingmo-installer.
-  * Update language, timezone, and keyboard handling code from lingmo-installer.
+  * Add timezone widget from lingmo_installer.
+  * Update language, timezone, and keyboard handling code from lingmo_installer.
   * Move the timezone step before the keyboard step.
   * Apply language, timezone, and keyboard changes at the end of oem-config
     rather than on the fly.
@@ -964,7 +964,7 @@ oem-config (1.3) edgy; urgency=low
 
 oem-config (1.2) edgy; urgency=low
 
-  * Merge from lingmo-installer:
+  * Merge from lingmo_installer:
     - Move from kbd-chooser to console-setup
       (https://launchpad.net/distros/lingmo/+spec/sane-installer-keyboard).
       We still need to add a UI element for the keyboard variant, and
@@ -997,7 +997,7 @@ oem-config (1.0) edgy; urgency=low
     UI; I don't believe the include/exclude mechanism was heavily used, but
     contact me if you were relying on it and it may be possible to restore
     it in a new form.
-  * I haven't yet ported the new i18n infrastructure from lingmo-installer, so the
+  * I haven't yet ported the new i18n infrastructure from lingmo_installer, so the
     oem-config UI will be untranslated.
   * Like lingmo-installer, we now incorporate source for all d-i components we use
     under d-i/source/ and include them directly in our binary package,

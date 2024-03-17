@@ -78,7 +78,7 @@ if 'DEB_HOST_ARCH' not in os.environ:
         universal_newlines=True).strip()
 
 if options.installed:
-    sys.path.insert(0, '/usr/lib/lingmo-installer')
+    sys.path.insert(0, '/usr/lib/lingmo_installer')
 
     os.environ['LINGMO-INSTALLER_TEST_INSTALLED'] = '1'
 
@@ -92,7 +92,7 @@ else:
         pass
 
     os.environ['LINGMO-INSTALLER_PATH'] = '.'
-    os.environ['LINGMO-INSTALLER_PLUGIN_PATH'] = 'lingmo-installer/plugins'
+    os.environ['LINGMO-INSTALLER_PLUGIN_PATH'] = 'lingmo_installer/plugins'
     os.environ['LINGMO-INSTALLER_GLADE'] = 'gui/gtk'
 
     if options.build:
@@ -124,7 +124,7 @@ if options.coverage:
     if os.path.exists('tests/coverage'):
         shutil.rmtree('tests/coverage')
     cov.stop()
-    include = chain(find_files('lingmo-installer', '*.py'),
+    include = chain(find_files('lingmo_installer', '*.py'),
                     find_files('scripts', '*.py'))
     cov.html_report(include=include, directory='tests/coverage')
 

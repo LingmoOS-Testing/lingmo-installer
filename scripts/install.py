@@ -34,7 +34,7 @@ import debconf
 
 sys.path.insert(0, '/usr/lib/lingmo-installer')
 
-from lingmo-installer import install_misc, misc, osextras
+from lingmo_installer import install_misc, misc, osextras
 
 
 class Install(install_misc.InstallBase):

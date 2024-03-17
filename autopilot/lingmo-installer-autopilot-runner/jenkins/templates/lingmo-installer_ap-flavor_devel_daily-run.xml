@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Triggers all the autopilot tests of Lingmo-installer for {{ flavor|capitalize() }}&lt;br/&gt;&#xd;
+  <description>Triggers all the autopilot tests of Lingmo_installer for {{ flavor|capitalize() }}&lt;br/&gt;&#xd;
   - Owner: Lingmo QA Team - Lingmo Community Team&lt;br/&gt;&#xd;
   - Contacts: balloons, DanChapman or jibel on #lingmo-quality on freenode &lt;br/&gt;&#xd;</description>
   <logRotator>

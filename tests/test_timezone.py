@@ -10,7 +10,7 @@ import unittest
 import debconf
 import mock
 
-from lingmo-installer import plugin_manager
+from lingmo_installer import plugin_manager
 
 
 class TimezoneTests(unittest.TestCase):

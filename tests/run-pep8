@@ -7,4 +7,4 @@ pycodestyle --exclude keyboard_names.py --exclude Keyboard.py \
     --ignore=E402,W504 \
     --max-line-length=119 \
     $(grep -lr '#!.*bin/python' bin) \
-    scripts tests tests/run tests/run-frontend lingmo-installer autopilot
+    scripts tests tests/run tests/run-frontend lingmo_installer autopilot

@@ -7,7 +7,7 @@ import unittest
 
 import mock
 
-from lingmo-installer import filteredcommand
+from lingmo_installer import filteredcommand
 
 
 class FilteredCommandTests(unittest.TestCase):

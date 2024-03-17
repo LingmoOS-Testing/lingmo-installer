@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 from autopilot.input import Pointer, Mouse
-from lingmo-installer_autopilot_tests.emulators import AutopilotGtkEmulatorBase
+from lingmo_installer_autopilot_tests.emulators import AutopilotGtkEmulatorBase
 
 import logging
 logger = logging.getLogger(__name__)

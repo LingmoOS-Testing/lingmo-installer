@@ -10,7 +10,7 @@ except ImportError:
     from test.support.os_helper import EnvironmentVarGuard
 import unittest
 
-from lingmo-installer import osextras
+from lingmo_installer import osextras
 
 
 class OsextrasTests(unittest.TestCase):

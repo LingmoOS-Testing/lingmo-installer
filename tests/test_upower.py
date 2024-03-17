@@ -3,7 +3,7 @@ import unittest
 
 import mock
 
-from lingmo-installer import upower
+from lingmo_installer import upower
 
 
 class UPowerTests(unittest.TestCase):

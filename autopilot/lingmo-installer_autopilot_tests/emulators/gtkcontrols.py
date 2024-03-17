@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 from autopilot.input import Pointer, Mouse, Keyboard
-from lingmo-installer_autopilot_tests.emulators import (
+from lingmo_installer_autopilot_tests.emulators import (
     AutopilotGtkEmulatorBase,
     gtkaccessible,
 )
-from lingmo-installer_autopilot_tests.tools.compare import expectThat
+from lingmo_installer_autopilot_tests.tools.compare import expectThat
 import logging
 import re
 from collections import namedtuple

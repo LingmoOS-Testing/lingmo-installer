@@ -1,4 +1,4 @@
-# Testing Lingmo-installer Installer
+# Testing Lingmo_installer Installer
 # Author: Dan Chapman <daniel@chapman-mail.com>
 # Copyright (C) 2013
 #
@@ -31,12 +31,12 @@ from autopilot.input import (
     Keyboard,
     Pointer
 )
-from lingmo-installer_autopilot_tests.emulators import AutopilotGtkEmulatorBase
-from lingmo-installer_autopilot_tests.emulators.gtkcontainers import (
+from lingmo_installer_autopilot_tests.emulators import AutopilotGtkEmulatorBase
+from lingmo_installer_autopilot_tests.emulators.gtkcontainers import (
     GtkAlignment,
     GtkBox,
 )
-from lingmo-installer_autopilot_tests.emulators.gtkcontrols import (
+from lingmo_installer_autopilot_tests.emulators.gtkcontrols import (
     GtkButton,
     GtkCheckButton,
     GtkLabel,
@@ -44,12 +44,12 @@ from lingmo-installer_autopilot_tests.emulators.gtkcontrols import (
     GtkTreeView,
     GtkRadioButton,
 )
-from lingmo-installer_autopilot_tests.emulators.gtktoplevel import (
+from lingmo_installer_autopilot_tests.emulators.gtktoplevel import (
     GtkWindow,
 )
-from lingmo-installer_autopilot_tests.testcase import Lingmo-installerTestCase
-from lingmo-installer_autopilot_tests.configs import english_label_conf
-from lingmo-installer_autopilot_tests.configs.partconfig import (
+from lingmo_installer_autopilot_tests.testcase import Lingmo_installerTestCase
+from lingmo_installer_autopilot_tests.configs import english_label_conf
+from lingmo_installer_autopilot_tests.configs.partconfig import (
     Config1,
     Config2,
     Config3,
@@ -57,16 +57,16 @@ from lingmo-installer_autopilot_tests.configs.partconfig import (
     Config5,
     Config6
 )
-from lingmo-installer_autopilot_tests.matchers.range import InRange
+from lingmo_installer_autopilot_tests.matchers.range import InRange
 
 custom_configs = [Config1, Config2, Config3, Config4, Config5, Config6]
 logger = logging.getLogger(__name__)
 
 
-class Lingmo-installerAutopilotTestCase(Lingmo-installerTestCase):
+class Lingmo_installerAutopilotTestCase(Lingmo_installerTestCase):
 
     def setUp(self):
-        super(Lingmo-installerAutopilotTestCase, self).setUp()
+        super(Lingmo_installerAutopilotTestCase, self).setUp()
         self.app = self.launch_application()
 
         self.pointing_device = Pointer(Mouse.create())
@@ -87,7 +87,7 @@ class Lingmo-installerAutopilotTestCase(Lingmo-installerTestCase):
 
     def tearDown(self):
         self._check_no_visible_dialogs()
-        super(Lingmo-installerAutopilotTestCase, self).tearDown()
+        super(Lingmo_installerAutopilotTestCase, self).tearDown()
         unittest.TestCase.tearDown(self)
 
     def launch_application(self):
@@ -108,7 +108,7 @@ class Lingmo-installerAutopilotTestCase(Lingmo-installerTestCase):
         return self.app.select_single(GtkWindow, name='live_installer')
 
     def go_to_next_page(self, wait=False):
-        """ Goes to the next page of Lingmo-installer installer
+        """ Goes to the next page of Lingmo_installer installer
 
         Will timeout after 2 mins waiting for next page to appear.
 
@@ -361,21 +361,21 @@ class Lingmo-installerAutopilotTestCase(Lingmo-installerTestCase):
 
         option_name = None
         if default:
-            from lingmo-installer_autopilot_tests.configs import default_install
+            from lingmo_installer_autopilot_tests.configs import default_install
 
             config = default_install
         if lvm:
-            from lingmo-installer_autopilot_tests.configs import lvm_install
+            from lingmo_installer_autopilot_tests.configs import lvm_install
 
             config = lvm_install
             option_name = 'use_lvm'
         if lvmEncrypt:
-            from lingmo-installer_autopilot_tests.configs import encrypt_lvm_install
+            from lingmo_installer_autopilot_tests.configs import encrypt_lvm_install
 
             config = encrypt_lvm_install
             option_name = 'use_crypto'
         if custom:
-            from lingmo-installer_autopilot_tests.configs import custom_install
+            from lingmo_installer_autopilot_tests.configs import custom_install
 
             config = custom_install
             option_name = 'custom_partitioning'

@@ -30,7 +30,7 @@ import syslog
 
 sys.path.insert(0, '/usr/lib/lingmo-installer')
 
-from lingmo-installer import im_switch, misc, osextras
+from lingmo_installer import im_switch, misc, osextras
 
 
 VERSION = '@VERSION@'

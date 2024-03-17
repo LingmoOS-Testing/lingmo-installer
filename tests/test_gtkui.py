@@ -9,33 +9,33 @@ import mock
 
 class TestFrontend(unittest.TestCase):
     def setUp(self):
-        for obj in ('lingmo-installer.misc.drop_privileges',
-                    'lingmo-installer.misc.regain_privileges',
-                    'lingmo-installer.misc.execute',
-                    'lingmo-installer.misc.dmimodel',
-                    'lingmo-installer.frontend.base.drop_privileges',
-                    'lingmo-installer.frontend.gtk_ui.Wizard.customize_installer',
-                    'lingmo-installer.nm.wireless_hardware_present',
-                    'lingmo-installer.nm.NetworkManager.start',
-                    'lingmo-installer.nm.NetworkManager.get_state',
-                    'lingmo-installer.misc.has_connection',
-                    'lingmo-installer.upower.setup_power_watch',
+        for obj in ('lingmo_installer.misc.drop_privileges',
+                    'lingmo_installer.misc.regain_privileges',
+                    'lingmo_installer.misc.execute',
+                    'lingmo_installer.misc.dmimodel',
+                    'lingmo_installer.frontend.base.drop_privileges',
+                    'lingmo_installer.frontend.gtk_ui.Wizard.customize_installer',
+                    'lingmo_installer.nm.wireless_hardware_present',
+                    'lingmo_installer.nm.NetworkManager.start',
+                    'lingmo_installer.nm.NetworkManager.get_state',
+                    'lingmo_installer.misc.has_connection',
+                    'lingmo_installer.upower.setup_power_watch',
                     'dbus.mainloop.glib.DBusGMainLoop',
-                    'lingmo-installer.i18n.reset_locale',
+                    'lingmo_installer.i18n.reset_locale',
                     ):
             patcher = mock.patch(obj)
             patched_obj = patcher.start()
             self.addCleanup(patcher.stop)
-            if obj in ('lingmo-installer.misc.wireless_hardware_present',
-                       'lingmo-installer.misc.has_connection'):
+            if obj in ('lingmo_installer.misc.wireless_hardware_present',
+                       'lingmo_installer.misc.has_connection'):
                 patched_obj.return_value = False
-            elif obj == 'lingmo-installer.i18n.reset_locale':
+            elif obj == 'lingmo_installer.i18n.reset_locale':
                 patched_obj.return_value = 'en_US.UTF-8'
 
     def test_question_dialog(self):
-        from lingmo-installer.frontend import gtk_ui
+        from lingmo_installer.frontend import gtk_ui
 
-        ui = gtk_ui.Wizard('test-lingmo-installer')
+        ui = gtk_ui.Wizard('test-lingmo_installer')
         with mock.patch('gi.repository.Gtk.Dialog.run') as run:
             run.return_value = 0
             ret = ui.question_dialog(title='♥', msg='♥',
@@ -53,9 +53,9 @@ class TestFrontend(unittest.TestCase):
     @unittest.skipIf('LINGMO-INSTALLER_TEST_INSTALLED' in os.environ,
                      'only testable against a build tree')
     def test_pages_fit_on_a_netbook(self):
-        from lingmo-installer.frontend import gtk_ui
+        from lingmo_installer.frontend import gtk_ui
 
-        ui = gtk_ui.Wizard('test-lingmo-installer')
+        ui = gtk_ui.Wizard('test-lingmo_installer')
         ui.translate_pages()
         for page in ui.pages:
             ui.set_page(page.module.NAME)
@@ -80,9 +80,9 @@ class TestFrontend(unittest.TestCase):
 
         from gi.repository import Gtk
 
-        from lingmo-installer.frontend import gtk_ui
+        from lingmo_installer.frontend import gtk_ui
 
-        ui = gtk_ui.Wizard('test-lingmo-installer')
+        ui = gtk_ui.Wizard('test-lingmo_installer')
         missing_translations = []
         with mock.patch.object(ui, 'translate_widget') as translate_widget:
             def side_effect(widget, lang=None, prefix=None):

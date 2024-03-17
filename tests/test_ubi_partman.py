@@ -8,7 +8,7 @@ import debconf
 # These tests require Mock 0.7.0
 import mock
 
-from lingmo-installer import misc, plugin_manager
+from lingmo_installer import misc, plugin_manager
 
 
 ubi_partman = plugin_manager.load_plugin('ubi-partman')
@@ -202,7 +202,7 @@ class TestPage(TestPageBase):
         oses = []
         has_lingmo = False
         head = self.page.calculate_autopartitioning_heading(oses, has_lingmo)
-        q = 'lingmo-installer/partitioner/heading_no_detected'
+        q = 'lingmo_installer/partitioner/heading_no_detected'
         no_detected = self.page.extended_description(q)
         self.assertEqual(no_detected, head)
 
@@ -215,8 +215,8 @@ class TestPageGrub(TestPageBase):
         self.page.maybe_update_grub()
         self.assertEqual(self.page.ui.set_grub_options.call_count, 0)
 
-    @mock.patch('lingmo-installer.misc.grub_options', _fake_grub_options('/dev/vda1'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_options', _fake_grub_options('/dev/vda1'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_maybe_update_install(self):
         self.page.install_bootloader = True
         self.page.disk_cache = {}
@@ -224,8 +224,8 @@ class TestPageGrub(TestPageBase):
         self.page.maybe_update_grub()
         self.assertEqual(self.page.ui.set_grub_options.call_count, 1)
 
-    @mock.patch('lingmo-installer.misc.grub_options', _fake_grub_options('/dev/vda1'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_options', _fake_grub_options('/dev/vda1'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_install_grub_to_valid_filesystem(self):
         # Return some fake grub options.
         self.page.install_bootloader = True
@@ -249,8 +249,8 @@ class TestPageGrub(TestPageBase):
             '/dev/vda1': True,
         })
 
-    @mock.patch('lingmo-installer.misc.grub_options', _fake_grub_options('/dev/vda1'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_options', _fake_grub_options('/dev/vda1'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_install_grub_to_invalid_filesystem(self):
         # Return some fake grub options.
         self.page.install_bootloader = True
@@ -274,9 +274,9 @@ class TestPageGrub(TestPageBase):
             '/dev/vda1': False,
         })
 
-    @mock.patch('lingmo-installer.misc.grub_options',
+    @mock.patch('lingmo_installer.misc.grub_options',
                 _fake_grub_options('/dev/vda1', '/dev/vda2'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_install_grub_to_mixed_filesystems(self):
         # Return some fake grub options.
         self.page.install_bootloader = True
@@ -307,9 +307,9 @@ class TestPageGrub(TestPageBase):
             '/dev/vda2': True,
         })
 
-    @mock.patch('lingmo-installer.misc.grub_options',
+    @mock.patch('lingmo_installer.misc.grub_options',
                 _fake_grub_options('/dev/vda1', '/dev/vda2', '/dev/vdb1'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_install_grub_offers_to_install_to_disk(self):
         # Return some fake grub options.
         self.page.install_bootloader = True
@@ -351,9 +351,9 @@ class TestPageGrub(TestPageBase):
             '/dev/vdb1': False,
         })
 
-    @mock.patch('lingmo-installer.misc.grub_options',
+    @mock.patch('lingmo_installer.misc.grub_options',
                 _fake_grub_options('/dev/vda1', '/dev/vda2', '/dev/vdb1'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_install_grub_offers_to_install_to_all_but_jfs(self):
         # Return some fake grub options.
         self.page.install_bootloader = True
@@ -395,9 +395,9 @@ class TestPageGrub(TestPageBase):
             '/dev/vdb1': False,
         })
 
-    @mock.patch('lingmo-installer.misc.grub_options',
+    @mock.patch('lingmo_installer.misc.grub_options',
                 _fake_grub_options('/dev/vda1', '/dev/vda2', '/dev/vdb1'))
-    @mock.patch('lingmo-installer.misc.grub_default', _fake_grub_default('/dev/vda'))
+    @mock.patch('lingmo_installer.misc.grub_default', _fake_grub_default('/dev/vda'))
     def test_install_grub_offers_to_install_to_all(self):
         # Return some fake grub options.
         self.page.install_bootloader = True
@@ -452,11 +452,11 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
         self.page.db = debconf.DebconfCommunicator('ubi-test', cloexec=True)
         self.addCleanup(self.page.db.shutdown)
 
-        find_in_os_prober = mock.patch('lingmo-installer.misc.find_in_os_prober')
+        find_in_os_prober = mock.patch('lingmo_installer.misc.find_in_os_prober')
         find_in_os_prober.start()
         self.addCleanup(find_in_os_prober.stop)
 
-        get_release = mock.patch('lingmo-installer.misc.get_release')
+        get_release = mock.patch('lingmo_installer.misc.get_release')
         get_release.start()
         self.addCleanup(get_release.stop)
         self.release = misc.ReleaseInfo('Lingmo', '11.04')
@@ -466,7 +466,7 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
         self.page.description_cache = {}
 
         # Always checked, never SUBST'ed.
-        question = 'lingmo-installer/partitioner/advanced'
+        question = 'lingmo_installer/partitioner/advanced'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
@@ -485,7 +485,7 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
         self.page.extra_options['resize'] = {
             '=dev=sda': ['', 0, 0, 0, '', 0, 'ntfs']}
 
-        question = 'lingmo-installer/partitioner/single_os_resize'
+        question = 'lingmo_installer/partitioner/single_os_resize'
         question_has_variables(question, ['OS', 'DISTRO'])
         # Ensure that we're not grabbing the value from previous runs.
         self.page.db.subst(question, 'OS', operating_system)
@@ -494,7 +494,7 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
         desc = self.page.extended_description(question)
         resize = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/multiple_os_format'
+        question = 'lingmo_installer/partitioner/multiple_os_format'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
@@ -517,7 +517,7 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
         self.page.extra_options = {}
         self.page.extra_options['use_device'] = ('debconf-return-value',
                                                  [{'disk-desc': 0}])
-        question = 'lingmo-installer/partitioner/multiple_os_format'
+        question = 'lingmo_installer/partitioner/multiple_os_format'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
@@ -553,14 +553,14 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
                                                  [{'disk-desc': 0}])
         self.page.extra_options['reuse'] = [(0, '/dev/sda1')]
 
-        question = 'lingmo-installer/partitioner/lingmo_format'
+        question = 'lingmo_installer/partitioner/lingmo_format'
         question_has_variables(question, ['CURDISTRO'])
         self.page.db.subst(question, 'CURDISTRO', operating_system)
         title = self.page.description(question)
         desc = self.page.extended_description(question)
         replace = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/multiple_os_format'
+        question = 'lingmo_installer/partitioner/multiple_os_format'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
@@ -600,21 +600,21 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
                                                  [{'disk-desc': 0}])
         self.page.extra_options['reuse'] = [(0, '/dev/sda1')]
 
-        question = 'lingmo-installer/partitioner/lingmo_format'
+        question = 'lingmo_installer/partitioner/lingmo_format'
         question_has_variables(question, ['CURDISTRO'])
         self.page.db.subst(question, 'CURDISTRO', operating_system)
         title = self.page.description(question)
         desc = self.page.extended_description(question)
         replace = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/multiple_os_format'
+        question = 'lingmo_installer/partitioner/multiple_os_format'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
         desc = self.page.extended_description(question)
         use_device = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/lingmo_reinstall'
+        question = 'lingmo_installer/partitioner/lingmo_reinstall'
         question_has_variables(question, ['CURDISTRO'])
         self.page.db.subst(question, 'CURDISTRO', operating_system)
         title = self.page.description(question)
@@ -655,21 +655,21 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
                                                  [{'disk-desc': 0}])
         self.page.extra_options['reuse'] = [(0, '/dev/sda1')]
 
-        question = 'lingmo-installer/partitioner/lingmo_format'
+        question = 'lingmo_installer/partitioner/lingmo_format'
         question_has_variables(question, ['CURDISTRO'])
         self.page.db.subst(question, 'CURDISTRO', operating_system)
         title = self.page.description(question)
         desc = self.page.extended_description(question)
         replace = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/multiple_os_format'
+        question = 'lingmo_installer/partitioner/multiple_os_format'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
         desc = self.page.extended_description(question)
         use_device = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/lingmo_reinstall'
+        question = 'lingmo_installer/partitioner/lingmo_reinstall'
         question_has_variables(question, ['CURDISTRO'])
         self.page.db.subst(question, 'CURDISTRO', operating_system)
         title = self.page.description(question)
@@ -709,14 +709,14 @@ class TestCalculateAutopartitioningOptions(unittest.TestCase):
         self.page.extra_options['resize'] = {
             '=dev=sda': ['', 0, 0, 0, '', 0, 'ntfs']}
 
-        question = 'lingmo-installer/partitioner/multiple_os_format'
+        question = 'lingmo_installer/partitioner/multiple_os_format'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
         desc = self.page.extended_description(question)
         use_device = ubi_partman.PartitioningOption(title, desc)
 
-        question = 'lingmo-installer/partitioner/multiple_os_resize'
+        question = 'lingmo_installer/partitioner/multiple_os_resize'
         question_has_variables(question, ['DISTRO'])
         self.page.db.subst(question, 'DISTRO', self.release.name)
         title = self.page.description(question)
@@ -752,20 +752,20 @@ class TestPageGtk(unittest.TestCase):
     def setUp(self):
         # Without this, GtkBuilder cannot construct ResizeWidget and
         # PartitionBox widgets.
-        from lingmo-installer import gtkwidgets
+        from lingmo_installer import gtkwidgets
 
         gtkwidgets  # pacify pyflakes
         controller = mock.Mock()
         self.gtk = ubi_partman.PageGtk(controller)
 
     def test_advanced_page_link(self):
-        from lingmo-installer import gtkwidgets
+        from lingmo_installer import gtkwidgets
 
         self.gtk.part_auto_hidden_label.emit('activate-link', '')
         gtkwidgets.refresh()
         self.gtk.controller.go_forward.assert_called_once_with()
 
-    @mock.patch('lingmo-installer.misc.grub_options',
+    @mock.patch('lingmo_installer.misc.grub_options',
                 _fake_grub_options_pairs(
                     ('/dev/vda', '/dev/vdb',
                      '/dev/vda1', '/dev/vda2', '/dev/vdb1'),
